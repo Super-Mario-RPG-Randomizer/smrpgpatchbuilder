@@ -391,7 +391,7 @@ def validate_dialog(
             line = 0
         if line >= LINE_COUNT:
             warnings.append(
-                "More than 3 line breaks without [await] or [page]"
+                f"3 or more newlines between [await] boundaries ({line} newlines found)"
             )
             break
 

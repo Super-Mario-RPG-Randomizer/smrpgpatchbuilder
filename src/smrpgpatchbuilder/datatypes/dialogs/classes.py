@@ -1,6 +1,6 @@
 """Base classes related to dialogs and dialog collections"""
 
-import re
+import warnings
 
 from smrpgpatchbuilder.datatypes.dialogs.ids.misc import (
     DIALOG_BANK_22_BEGINS,
@@ -17,7 +17,7 @@ from smrpgpatchbuilder.datatypes.scripts_common.classes import (
 from .ids.dialog_bank_ids import (
     DIALOG_BANK_22,
 )
-from .formatter import center_lines, center_marked_lines, format_dialog
+from .formatter import center_lines, center_marked_lines, format_dialog, validate_dialog
 from .utils import compress, COMPRESSION_TABLE
 
 class Dialog:
@@ -164,16 +164,6 @@ class DialogCollection:
         self._unused_ranges = []  # Reset unused ranges tracking
         new_pointer_table: list[int] = [-1] * 4096
 
-        # Convert mid-dialog standalone [await] (0x00 = null terminator) to
-        # [await][page]\n (0x03) so the game continues to the next page instead
-        # of treating it as end-of-dialog.
-        _mid_await = re.compile(r'\[await\](?!\[page\]|\[pause\]|\n|$)')
-        for bank_idx, bank_strings in enumerate(self._raw_data):
-            for str_idx, s in enumerate(bank_strings):
-                self._raw_data[bank_idx][str_idx] = _mid_await.sub(
-                    '[await][page]\n', s
-                )
-
         # Auto-format dialogs: insert line breaks and handle centering
         if self._auto_format:
             for bank_idx, bank_strings in enumerate(self._raw_data):
@@ -190,6 +180,14 @@ class DialogCollection:
                     else:
                         s = format_dialog(s)
                         self._raw_data[bank_idx][str_idx] = s
+
+        # Validate all dialogs for too many newlines between [await] boundaries
+        for bank_idx, bank_strings in enumerate(self._raw_data):
+            for str_idx, s in enumerate(bank_strings):
+                for w in validate_dialog(s):
+                    warnings.warn(
+                        f"Dialog bank 0x{bank_idx + 0x22:02x} index {str_idx}: {w}"
+                    )
 
         compressed_text = [
             [compress(d, self.compression_table) for d in self._raw_data[0]],
