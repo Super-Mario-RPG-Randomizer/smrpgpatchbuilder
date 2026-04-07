@@ -186,7 +186,7 @@ class DialogCollection:
             for str_idx, s in enumerate(bank_strings):
                 for w in validate_dialog(s):
                     warnings.warn(
-                        f"Dialog bank 0x{bank_idx + 0x22:02x} index {str_idx}: {w}"
+                        f"Dialog bank 0x{bank_idx + 0x22:02x} index {str_idx}: {w}\n  Text: {s!r}"
                     )
 
         compressed_text = [
