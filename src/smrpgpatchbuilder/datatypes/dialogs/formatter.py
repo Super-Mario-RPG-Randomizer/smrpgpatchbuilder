@@ -379,16 +379,25 @@ def validate_dialog(
     tokens = _tokenize(text, char_widths)
 
     line = 0
+    after_await = False  # True when [await] seen with no visible text since
 
     for tok in tokens:
         if tok.is_page_break:
             line = 0
+            after_await = False
         elif tok.is_line_break:
-            line += 1
-            if tok.is_await:
+            if tok.is_await or after_await:
+                # \n immediately after [await] (with only control tokens between) doesn't count
                 line = 0
+            else:
+                line += 1
+            after_await = False
         elif tok.is_await:
             line = 0
+            after_await = True
+        elif tok.width_px > 0 or tok.is_variable:
+            # Visible text clears the after_await grace period
+            after_await = False
         if line >= LINE_COUNT:
             warnings.append(
                 f"3 or more newlines between [await] boundaries ({line} newlines found)"
