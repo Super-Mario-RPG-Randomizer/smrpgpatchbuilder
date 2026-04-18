@@ -198,7 +198,7 @@ class TestValidateDialog:
         # 4 lines without await/page
         text = "Line1\nLine2\nLine3\nLine4"
         warnings = validate_dialog(text)
-        assert any("3 line breaks" in w for w in warnings)
+        assert any("3 or more newlines" in w for w in warnings)
 
     def test_no_warning_with_await(self):
         text = "Line1\nLine2\nLine3[await]\nLine4\nLine5\nLine6"
