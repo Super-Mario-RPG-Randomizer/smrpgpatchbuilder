@@ -865,6 +865,17 @@ class RoomCollection:
                 action_offset = obj.action_script - base_action_script
                 event_offset = obj.event_script - base_event_script
 
+                if event_offset < 0 or event_offset > 7:
+                    raise ValueError(
+                        f"Room {room_idx} object {obj_idx} (RegularClone):\n"
+                        f"  event_script offset {event_offset} out of range [0, 7]\n"
+                        f"  Clone event_script: {obj.event_script}\n"
+                        f"  Parent event_script: {parent.event_script}\n"
+                        f"  Base event_script: {base_event_script}\n"
+                        f"  A clone's event_script must be within 7 of the base "
+                        f"(min of parent + sibling clones); the encoding only has 3 bits."
+                    )
+
                 data[0] = (
                     ((event_offset & 0x07) << 5)
                     | ((action_offset & 0x03) << 3)
