@@ -1364,7 +1364,7 @@ _valid_unknowncmd_opcodes_fd: list[int] = [
     0,
     5,
     2,
-    5,
+    0,  # 8E (handled by DarkenLayersExceptPaletteRows)
     3,
     0,  # 90
     0,
@@ -2567,6 +2567,93 @@ class CopyVarToVar(UsableEventScriptCommand, EventScriptCommand):
             f"""illegal args for {self.identifier.label}: 
             0x{self.from_var:04x} 0x{self.to_var:04x}"""
         )
+
+
+class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand):
+    """Darken the level background and all NPCs except the palette rows whose bit is
+    set in `preserve_rows_mask`. The handler at $C0:4FD9 stores `fade_arg` into the
+    fade-depth control word ($318B / $318C / $318E) and `preserve_rows_mask` into the
+    palette-row exclusion bitmask ($003185). The palette processor at $C0:3AEE walks 8
+    rows and skips any row whose mask bit is set, leaving only the unmasked rows
+    darkened.
+
+    **Important:** the mask targets palette rows, not NPC indices. When a room's
+    `ally_sprite_buffer_size` is increased (e.g. when the protagonist needs more VRAM
+    for tilemap molds), every NPC palette row shifts by the same delta, so this mask
+    must shift left by the same delta to keep targeting the same NPCs.
+
+    Bit `n` of `preserve_rows_mask` corresponds to palette row `n`. Bit set = preserve
+    (skip darkening); bit clear = darken normally.
+
+    The middle arg byte is filler, ignored by the handler.
+
+    ## Lazy Shell command
+        (not available in Lazy Shell)
+
+    ## Opcode
+        `0xFD 0x8E`
+
+    ## Size
+        5 bytes
+
+    Args:
+        fade_arg (int): 8-bit fade-depth control. Low 6 bits → $318B (fade depth);
+            high 2 bits → $318C / $318E (fade-mode bits).
+        filler (int): Ignored by the handler. Set to 0 unless preserving original
+            byte sequences.
+        preserve_rows_mask (int): 8-bit palette-row exclusion bitmask. Bit n set =
+            palette row n is preserved (not darkened).
+        identifier (str | None): Give this command a label if you want another
+            command to jump to it.
+    """
+
+    _opcode = bytearray([0xFD, 0x8E])
+    _size: int = 5
+    _fade_arg: UInt8
+    _filler: UInt8
+    _preserve_rows_mask: UInt8
+
+    @property
+    def fade_arg(self) -> UInt8:
+        """8-bit fade-depth control: low 6 bits → fade depth, high 2 bits → fade mode."""
+        return self._fade_arg
+
+    def set_fade_arg(self, fade_arg: int) -> None:
+        """Set the 8-bit fade-depth control byte."""
+        self._fade_arg = UInt8(fade_arg)
+
+    @property
+    def filler(self) -> UInt8:
+        """Filler byte ignored by the handler at $C0:4FD9."""
+        return self._filler
+
+    def set_filler(self, filler: int) -> None:
+        """Set the filler byte (no effect in-game)."""
+        self._filler = UInt8(filler)
+
+    @property
+    def preserve_rows_mask(self) -> UInt8:
+        """8-bit palette-row exclusion mask. Bit n set = preserve palette row n."""
+        return self._preserve_rows_mask
+
+    def set_preserve_rows_mask(self, preserve_rows_mask: int) -> None:
+        """Set the 8-bit palette-row exclusion mask."""
+        self._preserve_rows_mask = UInt8(preserve_rows_mask)
+
+    def __init__(
+        self,
+        fade_arg: int,
+        preserve_rows_mask: int,
+        filler: int = 0,
+        identifier: str | None = None,
+    ) -> None:
+        super().__init__(identifier)
+        self.set_fade_arg(fade_arg)
+        self.set_filler(filler)
+        self.set_preserve_rows_mask(preserve_rows_mask)
+
+    def render(self, *args) -> bytearray:
+        return super().render(self.fade_arg, self.filler, self.preserve_rows_mask)
 
 
 class StoreBytesTo0335And0556(UsableEventScriptCommand, EventScriptCommand):

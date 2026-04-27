@@ -379,11 +379,11 @@ _valid_unknowncmd_queue_opcodes = [
     1,
     1,
     1,
-    2,  # 20
+    0,  # 20  (handled by A_ToggleSubroutineSlots)
     0,
     0,
     2,
-    5,
+    0,  # 24  (handled by A_SetSubroutineXTargets)
     5,
     0,
     0,
@@ -4047,8 +4047,78 @@ class A_SetAllSpeeds(_SetAnimationSpeed, UsableActionScriptCommand):
         super().__init__(speed, sequence=True, walking=True, identifier=identifier)
 
 
+class A_ToggleSubroutineSlots(UsableActionScriptCommand, ActionScriptCommand):
+    """Toggle the active state of the NPC's three sub-routine slots ($26,X / $27,X /
+    $28,X) according to a 3-bit mask. Bit 0 controls slot $26, bit 1 controls slot $27,
+    bit 2 controls slot $28. For each slot: if the corresponding bit is set and the slot
+    is currently inactive, the engine allocates a new sub-routine record (via $C0:E87E);
+    if the bit is clear and the slot is currently active, the engine deallocates the
+    existing record (via $C0:E8FE). Slots whose state already matches the mask are left
+    alone.
+
+    Sub-routines spawned this way drive per-NPC motion or animation independently of the
+    main action script. Pair with `A_SetSubroutineXTargets` (opcode 0x24) to give them
+    targets, or `A_EmbeddedAnimationRoutine` (opcode 0x26/0x27/0x28) to spawn a fully
+    parameterised routine.
+
+    ## Lazy Shell command
+        (not documented in Lazy Shell)
+
+    ## Opcode
+        `0x20`
+
+    ## Size
+        2 bytes
+
+    Args:
+        mask (int): 3-bit mask (bits 0-2). 1 = slot should be active; 0 = slot should be
+            inactive. Bit 0 = slot $26, bit 1 = slot $27, bit 2 = slot $28.
+        identifier (str | None): Give this command a label if you want another command to jump to it.
+    """
+
+    _opcode = 0x20
+    _size: int = 2
+    _mask: UInt8
+
+    @property
+    def mask(self) -> UInt8:
+        """3-bit slot-active mask. Bit 0 = $26, bit 1 = $27, bit 2 = $28."""
+        return self._mask
+
+    def set_mask(self, mask: int) -> None:
+        """Set the 3-bit slot-active mask."""
+        if mask & ~0x07:
+            raise InvalidCommandArgumentException(
+                f"A_ToggleSubroutineSlots mask 0x{mask:02X} has bits set outside the low 3 bits"
+            )
+        self._mask = UInt8(mask)
+
+    def __init__(self, mask: int, identifier: str | None = None) -> None:
+        super().__init__(identifier)
+        self.set_mask(mask)
+
+    def render(self, *args) -> bytearray:
+        return super().render(self.mask)
+
+
 class A_EmbeddedAnimationRoutine(UsableActionScriptCommand, ActionScriptCommand):
-    """(unknown)
+    """Spawn a fully-parameterised sub-routine into one of the NPC's three sub-routine
+    slots ($26,X / $27,X / $28,X). The opcode byte selects the slot: 0x26 → slot $26,
+    0x27 → slot $27, 0x28 → slot $28. Any sub-routine already in that slot is cleared
+    first (via $C0:E9DC).
+
+    The 14 payload bytes are copied into the NPC's per-slot scratch region:
+        [1..2]   X coord (16-bit)
+        [3..4]   Y coord (16-bit)
+        [5]      sprite sequence index
+        [6]      sprite control bits
+        [7..8]   Z coord (16-bit)
+        [9..10]  motion bits
+        [11..12] face direction
+        [13..14] (unidentified pair, written to $0C,X)
+        [15] high 2 bits → upper bits of $1E,X; low 3 bits → $1F,X
+
+    See $C0:D211 for the handler.
 
     ## Lazy Shell command
         `Embedded animation routine ($26)...`
@@ -4073,11 +4143,11 @@ class A_EmbeddedAnimationRoutine(UsableActionScriptCommand, ActionScriptCommand)
 
     @property
     def args(self) -> bytearray:
-        """(unknown)"""
+        """The full 16-byte payload (opcode + 14 data bytes + flag-byte)."""
         return self._args
 
     def set_args(self, args: bytearray) -> None:
-        """(unknown)"""
+        """Set the full 16-byte payload (opcode + 14 data bytes + flag-byte)."""
         assert len(args) == 16
         assert args[0] in [0x26, 0x27, 0x28]
         self._args = args
@@ -4088,6 +4158,65 @@ class A_EmbeddedAnimationRoutine(UsableActionScriptCommand, ActionScriptCommand)
 
     def render(self, *args) -> bytearray:
         return super().render(self.args)
+
+
+class A_SetSubroutineXTargets(UsableActionScriptCommand, ActionScriptCommand):
+    """Set destination X-coordinates for whichever of the NPC's first two sub-routine
+    slots ($26,X and $27,X) are currently active. For each active slot, the existing
+    sub-routine state is reset (via $C0:E9DC) and the corresponding 16-bit X target is
+    written into the NPC's $00,X (X coord); $02,X (Y coord low) and $1E,X (state flags)
+    are zeroed. Slot $28,X is **not** touched by this opcode.
+
+    Pair with `A_ToggleSubroutineSlots` (opcode 0x20) to first activate the slots whose
+    targets you intend to set.
+
+    ## Lazy Shell command
+        (not documented in Lazy Shell)
+
+    ## Opcode
+        `0x24`
+
+    ## Size
+        5 bytes
+
+    Args:
+        slot_26_x (int): 16-bit destination X coord written into slot $26,X if active.
+        slot_27_x (int): 16-bit destination X coord written into slot $27,X if active.
+        identifier (str | None): Give this command a label if you want another command to jump to it.
+    """
+
+    _opcode = 0x24
+    _size: int = 5
+    _slot_26_x: UInt16
+    _slot_27_x: UInt16
+
+    @property
+    def slot_26_x(self) -> UInt16:
+        """16-bit X target for slot $26,X (consumed only if slot is active)."""
+        return self._slot_26_x
+
+    def set_slot_26_x(self, slot_26_x: int) -> None:
+        """Set the 16-bit X target for slot $26,X."""
+        self._slot_26_x = UInt16(slot_26_x)
+
+    @property
+    def slot_27_x(self) -> UInt16:
+        """16-bit X target for slot $27,X (consumed only if slot is active)."""
+        return self._slot_27_x
+
+    def set_slot_27_x(self, slot_27_x: int) -> None:
+        """Set the 16-bit X target for slot $27,X."""
+        self._slot_27_x = UInt16(slot_27_x)
+
+    def __init__(
+        self, slot_26_x: int, slot_27_x: int, identifier: str | None = None
+    ) -> None:
+        super().__init__(identifier)
+        self.set_slot_26_x(slot_26_x)
+        self.set_slot_27_x(slot_27_x)
+
+    def render(self, *args) -> bytearray:
+        return super().render(self.slot_26_x, self.slot_27_x)
 
 
 class A_MaximizeSequenceSpeed(UsableActionScriptCommand, ActionScriptCommandNoArgs):
@@ -7024,7 +7153,12 @@ class A_IncPaletteRow(UsableActionScriptCommand, ActionScriptCommandNoArgs):
 
 
 class A_BPL262728(UsableActionScriptCommand, ActionScriptCommandNoArgs):
-    """(ASM instruction, effect unknown)
+    """Kill all three of the NPC's currently-active sub-routines (slots $26,X / $27,X /
+    $28,X) and zero the slot bytes. Implemented at $C0:D18F as `JSR $C0:E8E2`; the
+    `BPL` references in the LazyShell-derived class name come from the helper at
+    $C0:E8E2 which iterates the three slots and uses BPL to skip slots whose bit 7 is
+    already clear. Inverse pairing for `A_ToggleSubroutineSlots` (opcode 0x20) when you
+    want to clear all slots in one command.
 
     ## Lazy Shell command
         (not documented in Lazy Shell)

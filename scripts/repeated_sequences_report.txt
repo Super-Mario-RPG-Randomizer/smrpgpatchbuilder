@@ -1,0 +1,1616 @@
+REPEATED COMMAND SEQUENCES IN BATTLE ANIMATION SCRIPTS
+======================================================================
+
+Total unique repeated sequences found: 66
+Minimum sequence size: >= 3 bytes
+Only showing sequences that repeat at least twice WITHIN THE SAME BANK
+
+Total potential savings: ~1811 bytes
+Sequences ending with return-type command: 24
+======================================================================
+
+======================================================================
+SECTION 1: SEQUENCES ENDING WITH RETURN-TYPE COMMANDS
+(Best candidates for subroutine extraction)
+======================================================================
+
+SEQUENCE #1
+----------------------------------------
+Bank: 0x35
+Length: 11 commands
+Size: 25 bytes
+Occurrences in bank: 4
+Potential savings: ~66 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+  8. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  9. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  10. UnknownCommand()
+  11. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+
+======================================================================
+
+SEQUENCE #2
+----------------------------------------
+Bank: 0x35
+Length: 10 commands
+Size: 24 bytes
+Occurrences in bank: 4
+Potential savings: ~63 bytes
+Ends with: Jmp
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  8. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  9. UnknownCommand()
+  10. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+
+======================================================================
+
+SEQUENCE #3
+----------------------------------------
+Bank: 0x35
+Length: 8 commands
+Size: 18 bytes
+Occurrences in bank: 5
+Potential savings: ~60 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+  8. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+  - script_0x350202.py at index 56
+
+======================================================================
+
+SEQUENCE #4
+----------------------------------------
+Bank: 0x35
+Length: 14 commands
+Size: 32 bytes
+Occurrences in bank: 3
+Potential savings: ~58 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+  8. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  9. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  10. UnknownCommand()
+  11. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  12. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  13. UnknownCommand()
+  14. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+
+======================================================================
+
+SEQUENCE #5
+----------------------------------------
+Bank: 0x35
+Length: 7 commands
+Size: 17 bytes
+Occurrences in bank: 5
+Potential savings: ~56 bytes
+Ends with: Jmp
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+  - script_0x350202.py at index 57
+
+======================================================================
+
+SEQUENCE #6
+----------------------------------------
+Bank: 0x35
+Length: 13 commands
+Size: 31 bytes
+Occurrences in bank: 3
+Potential savings: ~56 bytes
+Ends with: Jmp
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  8. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  9. UnknownCommand()
+  10. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  11. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  12. UnknownCommand()
+  13. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+
+======================================================================
+
+SEQUENCE #7
+----------------------------------------
+Bank: 0x35
+Length: 9 commands
+Size: 21 bytes
+Occurrences in bank: 4
+Potential savings: ~54 bytes
+Ends with: Jmp
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  8. UnknownCommand()
+  9. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+  - script_0x350202.py at index 55
+
+======================================================================
+
+SEQUENCE #8
+----------------------------------------
+Bank: 0x35
+Length: 12 commands
+Size: 28 bytes
+Occurrences in bank: 3
+Potential savings: ~50 bytes
+Ends with: Jmp
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  8. UnknownCommand()
+  9. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  10. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  11. UnknownCommand()
+  12. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+
+======================================================================
+
+SEQUENCE #9
+----------------------------------------
+Bank: 0x35
+Length: 6 commands
+Size: 14 bytes
+Occurrences in bank: 5
+Potential savings: ~44 bytes
+Ends with: Jmp
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+  - script_0x350202.py at index 55
+  - script_0x350202.py at index 58
+
+======================================================================
+
+SEQUENCE #10
+----------------------------------------
+Bank: 0x35
+Length: 5 commands
+Size: 11 bytes
+Occurrences in bank: 6
+Potential savings: ~40 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+  - script_0x350202.py at index 56
+  - script_0x350202.py at index 59
+
+======================================================================
+
+SEQUENCE #11
+----------------------------------------
+Bank: 0x35
+Length: 4 commands
+Size: 10 bytes
+Occurrences in bank: 6
+Potential savings: ~35 bytes
+Ends with: Jmp
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+  - script_0x350202.py at index 57
+  - script_0x350202.py at index 60
+
+======================================================================
+
+SEQUENCE #12
+----------------------------------------
+Bank: 0x35
+Length: 15 commands
+Size: 35 bytes
+Occurrences in bank: 2
+Potential savings: ~32 bytes
+Ends with: Jmp
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  8. UnknownCommand()
+  9. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  10. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  11. UnknownCommand()
+  12. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+  13. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161ac0>])
+  14. UnknownCommand()
+  15. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161eb0>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+
+======================================================================
+
+SEQUENCE #13
+----------------------------------------
+Bank: 0x35
+Length: 3 commands
+Size: 7 bytes
+Occurrences in bank: 6
+Potential savings: ~20 bytes
+Ends with: Jmp
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+  - script_0x350202.py at index 55
+  - script_0x350202.py at index 58
+  - script_0x350202.py at index 61
+
+======================================================================
+
+SEQUENCE #14
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 4 bytes
+Occurrences in bank: 11
+Potential savings: ~10 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01581d0>])
+
+Locations:
+  - script_0x350202.py at index 32
+  - script_0x350202.py at index 35
+  - script_0x350202.py at index 38
+  - script_0x350202.py at index 41
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+  - script_0x350202.py at index 56
+  - script_0x350202.py at index 59
+  - script_0x350202.py at index 62
+
+======================================================================
+
+SEQUENCE #15
+----------------------------------------
+Bank: 0x35
+Length: 5 commands
+Size: 11 bytes
+Occurrences in bank: 2
+Potential savings: ~8 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01581d0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0158380>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01584d0>])
+
+Locations:
+  - script_0x350202.py at index 32
+  - script_0x350202.py at index 41
+
+======================================================================
+
+SEQUENCE #16
+----------------------------------------
+Bank: 0x35
+Length: 4 commands
+Size: 10 bytes
+Occurrences in bank: 2
+Potential savings: ~7 bytes
+Ends with: Jmp
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01581d0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0158380>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01584d0>])
+
+Locations:
+  - script_0x350202.py at index 33
+  - script_0x350202.py at index 42
+
+======================================================================
+
+SEQUENCE #17
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 5 bytes
+Occurrences in bank: 3
+Potential savings: ~4 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ec03110>])
+
+Locations:
+  - script_0x358BEC.py at index 884
+  - script_0x358BEC.py at index 1088
+  - script_0x35C992.py at index 857
+
+======================================================================
+
+SEQUENCE #18
+----------------------------------------
+Bank: 0x35
+Length: 3 commands
+Size: 7 bytes
+Occurrences in bank: 2
+Potential savings: ~4 bytes
+Ends with: Jmp
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0158380>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01584d0>])
+
+Locations:
+  - script_0x350202.py at index 34
+  - script_0x350202.py at index 43
+
+======================================================================
+
+SEQUENCE #19
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 2
+Potential savings: ~3 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f4091c0>])
+
+Locations:
+  - script_0x352128.py at index 38
+  - script_0x352128.py at index 42
+
+======================================================================
+
+SEQUENCE #20
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 2
+Potential savings: ~3 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f6d1a00>])
+
+Locations:
+  - script_0x358BEC.py at index 1190
+  - script_0x358BEC.py at index 2248
+
+======================================================================
+
+SEQUENCE #21
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 5 bytes
+Occurrences in bank: 2
+Potential savings: ~2 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359eca95b0>])
+
+Locations:
+  - script_0x358916.py at index 8
+  - script_0x3589D5.py at index 3
+
+======================================================================
+
+SEQUENCE #22
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 5 bytes
+Occurrences in bank: 2
+Potential savings: ~2 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f1bf740>])
+
+Locations:
+  - script_0x358BEC.py at index 2011
+  - script_0x35DD01.py at index 717
+
+======================================================================
+
+SEQUENCE #23
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 4 bytes
+Occurrences in bank: 2
+Potential savings: ~1 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359eef2690>])
+
+Locations:
+  - script_0x355FA1.py at index 405
+  - script_0x355FA1.py at index 427
+
+======================================================================
+
+SEQUENCE #24
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 4 bytes
+Occurrences in bank: 2
+Potential savings: ~1 bytes
+Ends with: Jmp
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ed04680>])
+
+Locations:
+  - script_0x358BEC.py at index 112
+  - script_0x358BEC.py at index 128
+
+======================================================================
+
+======================================================================
+SECTION 2: OTHER REPEATED SEQUENCES
+(May need additional return command if extracted)
+======================================================================
+
+SEQUENCE #25
+----------------------------------------
+Bank: 0x35
+Length: 10 commands
+Size: 22 bytes
+Occurrences in bank: 4
+Potential savings: ~57 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+  8. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  9. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  10. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+
+======================================================================
+
+SEQUENCE #26
+----------------------------------------
+Bank: 0x35
+Length: 9 commands
+Size: 21 bytes
+Occurrences in bank: 4
+Potential savings: ~54 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+  8. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  9. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+
+======================================================================
+
+SEQUENCE #27
+----------------------------------------
+Bank: 0x35
+Length: 9 commands
+Size: 21 bytes
+Occurrences in bank: 4
+Potential savings: ~54 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  8. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  9. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+
+======================================================================
+
+SEQUENCE #28
+----------------------------------------
+Bank: 0x35
+Length: 13 commands
+Size: 29 bytes
+Occurrences in bank: 3
+Potential savings: ~52 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+  8. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  9. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  10. UnknownCommand()
+  11. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  12. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  13. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+
+======================================================================
+
+SEQUENCE #29
+----------------------------------------
+Bank: 0x35
+Length: 8 commands
+Size: 20 bytes
+Occurrences in bank: 4
+Potential savings: ~51 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  8. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+
+======================================================================
+
+SEQUENCE #30
+----------------------------------------
+Bank: 0x35
+Length: 12 commands
+Size: 28 bytes
+Occurrences in bank: 3
+Potential savings: ~50 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+  8. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  9. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  10. UnknownCommand()
+  11. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  12. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+
+======================================================================
+
+SEQUENCE #31
+----------------------------------------
+Bank: 0x35
+Length: 12 commands
+Size: 28 bytes
+Occurrences in bank: 3
+Potential savings: ~50 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  8. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  9. UnknownCommand()
+  10. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  11. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  12. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+
+======================================================================
+
+SEQUENCE #32
+----------------------------------------
+Bank: 0x35
+Length: 7 commands
+Size: 15 bytes
+Occurrences in bank: 5
+Potential savings: ~48 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+  - script_0x350202.py at index 56
+
+======================================================================
+
+SEQUENCE #33
+----------------------------------------
+Bank: 0x35
+Length: 11 commands
+Size: 27 bytes
+Occurrences in bank: 3
+Potential savings: ~48 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  8. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  9. UnknownCommand()
+  10. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  11. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+
+======================================================================
+
+SEQUENCE #34
+----------------------------------------
+Bank: 0x35
+Length: 8 commands
+Size: 18 bytes
+Occurrences in bank: 4
+Potential savings: ~45 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  8. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+  - script_0x350202.py at index 55
+
+======================================================================
+
+SEQUENCE #35
+----------------------------------------
+Bank: 0x35
+Length: 6 commands
+Size: 14 bytes
+Occurrences in bank: 5
+Potential savings: ~44 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+  - script_0x350202.py at index 56
+
+======================================================================
+
+SEQUENCE #36
+----------------------------------------
+Bank: 0x35
+Length: 6 commands
+Size: 14 bytes
+Occurrences in bank: 5
+Potential savings: ~44 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+  - script_0x350202.py at index 57
+
+======================================================================
+
+SEQUENCE #37
+----------------------------------------
+Bank: 0x35
+Length: 11 commands
+Size: 25 bytes
+Occurrences in bank: 3
+Potential savings: ~44 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  8. UnknownCommand()
+  9. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  10. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  11. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+
+======================================================================
+
+SEQUENCE #38
+----------------------------------------
+Bank: 0x35
+Length: 7 commands
+Size: 17 bytes
+Occurrences in bank: 4
+Potential savings: ~42 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+  - script_0x350202.py at index 55
+
+======================================================================
+
+SEQUENCE #39
+----------------------------------------
+Bank: 0x35
+Length: 10 commands
+Size: 24 bytes
+Occurrences in bank: 3
+Potential savings: ~42 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  8. UnknownCommand()
+  9. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  10. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+
+======================================================================
+
+SEQUENCE #40
+----------------------------------------
+Bank: 0x35
+Length: 5 commands
+Size: 13 bytes
+Occurrences in bank: 5
+Potential savings: ~40 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+  - script_0x350202.py at index 57
+
+======================================================================
+
+SEQUENCE #41
+----------------------------------------
+Bank: 0x35
+Length: 5 commands
+Size: 11 bytes
+Occurrences in bank: 5
+Potential savings: ~32 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+  - script_0x350202.py at index 55
+  - script_0x350202.py at index 58
+
+======================================================================
+
+SEQUENCE #42
+----------------------------------------
+Bank: 0x35
+Length: 15 commands
+Size: 35 bytes
+Occurrences in bank: 2
+Potential savings: ~32 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+  5. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  6. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  7. UnknownCommand()
+  8. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  9. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  10. UnknownCommand()
+  11. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  12. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  13. UnknownCommand()
+  14. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+  15. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161ac0>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+
+======================================================================
+
+SEQUENCE #43
+----------------------------------------
+Bank: 0x35
+Length: 15 commands
+Size: 35 bytes
+Occurrences in bank: 2
+Potential savings: ~32 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  8. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  9. UnknownCommand()
+  10. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  11. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  12. UnknownCommand()
+  13. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+  14. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161ac0>])
+  15. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+
+======================================================================
+
+SEQUENCE #44
+----------------------------------------
+Bank: 0x35
+Length: 14 commands
+Size: 34 bytes
+Occurrences in bank: 2
+Potential savings: ~31 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+  4. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  5. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  6. UnknownCommand()
+  7. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  8. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  9. UnknownCommand()
+  10. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  11. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  12. UnknownCommand()
+  13. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+  14. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161ac0>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+
+======================================================================
+
+SEQUENCE #45
+----------------------------------------
+Bank: 0x35
+Length: 14 commands
+Size: 32 bytes
+Occurrences in bank: 2
+Potential savings: ~29 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  8. UnknownCommand()
+  9. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  10. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  11. UnknownCommand()
+  12. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+  13. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161ac0>])
+  14. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+
+======================================================================
+
+SEQUENCE #46
+----------------------------------------
+Bank: 0x35
+Length: 4 commands
+Size: 10 bytes
+Occurrences in bank: 5
+Potential savings: ~28 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+  - script_0x350202.py at index 55
+  - script_0x350202.py at index 58
+
+======================================================================
+
+SEQUENCE #47
+----------------------------------------
+Bank: 0x35
+Length: 13 commands
+Size: 31 bytes
+Occurrences in bank: 2
+Potential savings: ~28 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+  3. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163e00>])
+  4. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160560>])
+  5. UnknownCommand()
+  6. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160ce0>])
+  7. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160f20>])
+  8. UnknownCommand()
+  9. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161280>])
+  10. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01610a0>])
+  11. UnknownCommand()
+  12. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01618b0>])
+  13. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0161ac0>])
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+
+======================================================================
+
+SEQUENCE #48
+----------------------------------------
+Bank: 0x35
+Length: 4 commands
+Size: 8 bytes
+Occurrences in bank: 6
+Potential savings: ~25 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  4. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+  - script_0x350202.py at index 56
+  - script_0x350202.py at index 59
+
+======================================================================
+
+SEQUENCE #49
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 24 bytes
+Occurrences in bank: 2
+Potential savings: ~21 bytes
+
+Commands:
+  1. DefineObjectQueue(destinations=[6 items])
+  2. DefineObjectQueue(destinations=[6 items])
+
+Locations:
+  - script_0x35058A.py at index 1
+  - script_0x35058A.py at index 2
+
+======================================================================
+
+SEQUENCE #50
+----------------------------------------
+Bank: 0x35
+Length: 3 commands
+Size: 7 bytes
+Occurrences in bank: 6
+Potential savings: ~20 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+
+Locations:
+  - script_0x350202.py at index 44
+  - script_0x350202.py at index 47
+  - script_0x350202.py at index 50
+  - script_0x350202.py at index 53
+  - script_0x350202.py at index 56
+  - script_0x350202.py at index 59
+
+======================================================================
+
+SEQUENCE #51
+----------------------------------------
+Bank: 0x35
+Length: 3 commands
+Size: 7 bytes
+Occurrences in bank: 6
+Potential savings: ~20 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  3. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+  - script_0x350202.py at index 57
+  - script_0x350202.py at index 60
+
+======================================================================
+
+SEQUENCE #52
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 6
+Potential savings: ~15 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0163aa0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+
+Locations:
+  - script_0x350202.py at index 45
+  - script_0x350202.py at index 48
+  - script_0x350202.py at index 51
+  - script_0x350202.py at index 54
+  - script_0x350202.py at index 57
+  - script_0x350202.py at index 60
+
+======================================================================
+
+SEQUENCE #53
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 5 bytes
+Occurrences in bank: 4
+Potential savings: ~6 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ef25fd0>])
+  2. UnknownCommand()
+
+Locations:
+  - script_0x355FA1.py at index 516
+  - script_0x355FA1.py at index 520
+  - script_0x355FA1.py at index 544
+  - script_0x355FA1.py at index 731
+
+======================================================================
+
+SEQUENCE #54
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 3
+Potential savings: ~6 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f3d1be0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f3d1c70>])
+
+Locations:
+  - script_0x353437.py at index 599
+  - script_0x353437.py at index 811
+  - script_0x353437.py at index 1142
+
+======================================================================
+
+SEQUENCE #55
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 4 bytes
+Occurrences in bank: 6
+Potential savings: ~5 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0160260>])
+  2. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 46
+  - script_0x350202.py at index 49
+  - script_0x350202.py at index 52
+  - script_0x350202.py at index 55
+  - script_0x350202.py at index 58
+  - script_0x350202.py at index 61
+
+======================================================================
+
+SEQUENCE #56
+----------------------------------------
+Bank: 0x35
+Length: 4 commands
+Size: 8 bytes
+Occurrences in bank: 2
+Potential savings: ~5 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01581d0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0158380>])
+  4. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 32
+  - script_0x350202.py at index 41
+
+======================================================================
+
+SEQUENCE #57
+----------------------------------------
+Bank: 0x35
+Length: 3 commands
+Size: 8 bytes
+Occurrences in bank: 2
+Potential savings: ~5 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ef26120>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ef261b0>])
+  3. UnknownCommand()
+
+Locations:
+  - script_0x355FA1.py at index 519
+  - script_0x355FA1.py at index 543
+
+======================================================================
+
+SEQUENCE #58
+----------------------------------------
+Bank: 0x35
+Length: 3 commands
+Size: 7 bytes
+Occurrences in bank: 2
+Potential savings: ~4 bytes
+
+Commands:
+  1. UnknownCommand()
+  2. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01581d0>])
+  3. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0158380>])
+
+Locations:
+  - script_0x350202.py at index 32
+  - script_0x350202.py at index 41
+
+======================================================================
+
+SEQUENCE #59
+----------------------------------------
+Bank: 0x35
+Length: 3 commands
+Size: 7 bytes
+Occurrences in bank: 2
+Potential savings: ~4 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01581d0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0158380>])
+  3. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 33
+  - script_0x350202.py at index 42
+
+======================================================================
+
+SEQUENCE #60
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 2
+Potential savings: ~3 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a01581d0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0158380>])
+
+Locations:
+  - script_0x350202.py at index 33
+  - script_0x350202.py at index 42
+
+======================================================================
+
+SEQUENCE #61
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 2
+Potential savings: ~3 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f56f1a0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f56f230>])
+
+Locations:
+  - script_0x351493.py at index 208
+  - script_0x351493.py at index 253
+
+======================================================================
+
+SEQUENCE #62
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 2
+Potential savings: ~3 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f598710>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359f5987a0>])
+
+Locations:
+  - script_0x351493.py at index 248
+  - script_0x351493.py at index 303
+
+======================================================================
+
+SEQUENCE #63
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 2
+Potential savings: ~3 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ef26120>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ef261b0>])
+
+Locations:
+  - script_0x355FA1.py at index 519
+  - script_0x355FA1.py at index 543
+
+======================================================================
+
+SEQUENCE #64
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 2
+Potential savings: ~3 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ef26390>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359ef26420>])
+
+Locations:
+  - script_0x355FA1.py at index 524
+  - script_0x355FA1.py at index 533
+
+======================================================================
+
+SEQUENCE #65
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 6 bytes
+Occurrences in bank: 2
+Potential savings: ~3 bytes
+
+Commands:
+  1. Jmp(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359e75b0b0>])
+  2. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b359e75b140>])
+
+Locations:
+  - script_0x35C992.py at index 22
+  - script_0x35C992.py at index 25
+
+======================================================================
+
+SEQUENCE #66
+----------------------------------------
+Bank: 0x35
+Length: 2 commands
+Size: 4 bytes
+Occurrences in bank: 2
+Potential savings: ~1 bytes
+
+Commands:
+  1. RunSubroutine(destinations=[<smrpgpatchbuilder.datatypes.scripts_common.classes.TransformableIdentifier object at 0x7b35a0158380>])
+  2. UnknownCommand()
+
+Locations:
+  - script_0x350202.py at index 34
+  - script_0x350202.py at index 43
+
+======================================================================
+
