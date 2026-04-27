@@ -2570,14 +2570,23 @@ class CopyVarToVar(UsableEventScriptCommand, EventScriptCommand):
 
 
 class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand):
-    """Darken the level background and all NPCs except the sprite palette rows listed
-    in `preserve_rows`. The handler at $C0:4FD9 stores `fade_arg` into the fade-depth
-    control word ($318B / $318C / $318E) and an 8-bit exclusion bitmask into $003185.
-    The palette processor at $C0:3AEE walks 8 rows (the OBJ palette set, rows 8-15)
-    and skips any row whose bit is set in the bitmask, leaving only the unmasked rows
-    darkened.
+    """Darken the level background and all NPCs except the OBJ palette rows listed
+    in `preserve_rows`, ramping over `duration_frames` frames. The handler at
+    $C0:4FD9 unpacks three bytes:
 
-    The 8 mask bits correspond to the OBJ palette rows in order:
+        byte 2 (offset 0): low 6 bits → fade depth ($318B);
+                           high 2 bits → bits 0-1 of duration counter
+        byte 3 (offset 1): bits 2-9 of the duration counter
+        byte 4 (offset 2): 8-bit OBJ palette-row exclusion mask ($003185)
+
+    The two duration-related bytes get combined as a 16-bit load and shifted right
+    by 6, giving a 10-bit duration value written to $318C and $318E. The palette
+    processor at $C0:3A44 decrements $318C each frame and ends the fade when it
+    reaches zero.
+
+    The palette processor at $C0:3AEE walks 8 rows (the OBJ palette set, rows
+    8-15) and skips any row whose bit is set in the exclusion mask, leaving only
+    the unmasked rows darkened. Mask bits correspond to:
 
         bit 0 → MARIO_PALETTE        (PaletteRow 8 — the player)
         bit 1 → NPC_PALETTE_ROW_1    (PaletteRow 9)
@@ -2588,12 +2597,15 @@ class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand
         bit 6 → NPC_PALETTE_ROW_6    (PaletteRow 14)
         bit 7 → NPC_PALETTE_ROW_7    (PaletteRow 15)
 
-    **Note on ally-buffer growth:** when a room's `ally_sprite_buffer_size` increases
-    (e.g. for non-Mario protagonists with tilemap molds), every NPC palette row shifts
-    by the same delta, so the NPC entries in `preserve_rows` must shift forward by the
-    same delta to keep targeting the same NPCs. `MARIO_PALETTE` does not shift.
+    `fade_depth=50` (0x32) is treated as a sentinel "max" by the processor at
+    $C0:3A4C — when the duration counter expires at this depth, the fade state is
+    cleared completely instead of transitioning into "fade-out completed" mode.
 
-    The middle arg byte is filler, ignored by the handler.
+    **Note on ally-buffer growth:** when a room's `ally_sprite_buffer_size`
+    increases (e.g. for non-Mario protagonists with tilemap molds), every NPC
+    palette row shifts by the same delta, so the NPC entries in `preserve_rows`
+    must shift forward by the same delta to keep targeting the same NPCs.
+    `MARIO_PALETTE` does not shift.
 
     ## Lazy Shell command
         (not available in Lazy Shell)
@@ -2605,13 +2617,14 @@ class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand
         5 bytes
 
     Args:
-        fade_arg (int): 8-bit fade-depth control. Low 6 bits → $318B (fade depth);
-            high 2 bits → $318C / $318E (fade-mode bits).
-        preserve_rows (list[PaletteRow]): Palette rows to preserve from the darken
-            effect. Each entry must be `MARIO_PALETTE` or `NPC_PALETTE_ROW_1` through
-            `NPC_PALETTE_ROW_7` (PaletteRow values 8-15). Empty list = darken all rows.
-        filler (int): Ignored by the handler. Set to 0 unless preserving original
-            byte sequences.
+        fade_depth (int): Color-subtraction intensity, 0-63. Higher = darker.
+            Special value 50 (0x32) is the "max depth" sentinel that triggers
+            full state-clear when the fade ends.
+        duration_frames (int): How many frames the fade lasts, 0-1023.
+        preserve_rows (list[PaletteRow]): Palette rows to preserve from the
+            darken effect. Each entry must be `MARIO_PALETTE` or
+            `NPC_PALETTE_ROW_1` through `NPC_PALETTE_ROW_7` (PaletteRow values
+            8-15). Empty list = darken all rows.
         identifier (str | None): Give this command a label if you want another
             command to jump to it.
     """
@@ -2619,27 +2632,39 @@ class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand
     _opcode = bytearray([0xFD, 0x8E])
     _size: int = 5
     _OBJ_PALETTE_BASE = 8  # PaletteRow(8) = MARIO_PALETTE = bit 0 of the mask.
-    _fade_arg: UInt8
-    _filler: UInt8
+    _MAX_FADE_DEPTH = 0x3F  # 6-bit field
+    _MAX_DURATION = 0x3FF   # 10-bit field
+    _fade_depth: UInt8
+    _duration_frames: UInt16
     _preserve_rows: list[PaletteRow]
 
     @property
-    def fade_arg(self) -> UInt8:
-        """8-bit fade-depth control: low 6 bits → fade depth, high 2 bits → fade mode."""
-        return self._fade_arg
+    def fade_depth(self) -> UInt8:
+        """Color-subtraction intensity, 0-63. 50 (0x32) is the max-depth sentinel."""
+        return self._fade_depth
 
-    def set_fade_arg(self, fade_arg: int) -> None:
-        """Set the 8-bit fade-depth control byte."""
-        self._fade_arg = UInt8(fade_arg)
+    def set_fade_depth(self, fade_depth: int) -> None:
+        """Set the fade depth (0-63)."""
+        if not 0 <= fade_depth <= self._MAX_FADE_DEPTH:
+            raise InvalidCommandArgumentException(
+                f"DarkenLayersExceptPaletteRows fade_depth must be 0-{self._MAX_FADE_DEPTH}; "
+                f"got {fade_depth}"
+            )
+        self._fade_depth = UInt8(fade_depth)
 
     @property
-    def filler(self) -> UInt8:
-        """Filler byte ignored by the handler at $C0:4FD9."""
-        return self._filler
+    def duration_frames(self) -> UInt16:
+        """Fade duration in frames, 0-1023."""
+        return self._duration_frames
 
-    def set_filler(self, filler: int) -> None:
-        """Set the filler byte (no effect in-game)."""
-        self._filler = UInt8(filler)
+    def set_duration_frames(self, duration_frames: int) -> None:
+        """Set the fade duration in frames (0-1023)."""
+        if not 0 <= duration_frames <= self._MAX_DURATION:
+            raise InvalidCommandArgumentException(
+                f"DarkenLayersExceptPaletteRows duration_frames must be 0-{self._MAX_DURATION}; "
+                f"got {duration_frames}"
+            )
+        self._duration_frames = UInt16(duration_frames)
 
     @property
     def preserve_rows(self) -> list[PaletteRow]:
@@ -2677,18 +2702,22 @@ class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand
 
     def __init__(
         self,
-        fade_arg: int,
+        fade_depth: int,
+        duration_frames: int,
         preserve_rows: list[PaletteRow | int],
-        filler: int = 0,
         identifier: str | None = None,
     ) -> None:
         super().__init__(identifier)
-        self.set_fade_arg(fade_arg)
-        self.set_filler(filler)
+        self.set_fade_depth(fade_depth)
+        self.set_duration_frames(duration_frames)
         self.set_preserve_rows(preserve_rows)
 
     def render(self, *args) -> bytearray:
-        return super().render(self.fade_arg, self.filler, self.preserve_rows_mask)
+        # The handler reads byte 2 (low 6 bits = depth, high 2 bits = duration[0:2])
+        # and byte 3 (duration[2:10]), so re-pack here.
+        byte_2 = ((self._duration_frames & 0x03) << 6) | (self._fade_depth & 0x3F)
+        byte_3 = (self._duration_frames >> 2) & 0xFF
+        return super().render(UInt8(byte_2), UInt8(byte_3), self.preserve_rows_mask)
 
 
 class StoreBytesTo0335And0556(UsableEventScriptCommand, EventScriptCommand):
