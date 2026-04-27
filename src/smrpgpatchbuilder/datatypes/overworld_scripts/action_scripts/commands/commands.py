@@ -7152,13 +7152,16 @@ class A_IncPaletteRow(UsableActionScriptCommand, ActionScriptCommandNoArgs):
 # branching / jumps
 
 
-class A_BPL262728(UsableActionScriptCommand, ActionScriptCommandNoArgs):
+class A_KillAllSubroutineSlots(UsableActionScriptCommand, ActionScriptCommandNoArgs):
     """Kill all three of the NPC's currently-active sub-routines (slots $26,X / $27,X /
     $28,X) and zero the slot bytes. Implemented at $C0:D18F as `JSR $C0:E8E2`; the
-    `BPL` references in the LazyShell-derived class name come from the helper at
-    $C0:E8E2 which iterates the three slots and uses BPL to skip slots whose bit 7 is
-    already clear. Inverse pairing for `A_ToggleSubroutineSlots` (opcode 0x20) when you
-    want to clear all slots in one command.
+    helper at $C0:E8E2 iterates the three slots and uses BPL to skip any slot whose
+    bit 7 is already clear (= already inactive). For active slots, it calls $C0:E8FE
+    to deallocate the sub-routine record from the pool at $0103, then zeros the slot
+    byte. Inverse pairing for `A_ToggleSubroutineSlots` (opcode 0x20) when you want
+    to clear all slots in one command.
+
+    Previously named `A_BPL262728` after the LazyShell-style label.
 
     ## Lazy Shell command
         (not documented in Lazy Shell)
@@ -7174,6 +7177,10 @@ class A_BPL262728(UsableActionScriptCommand, ActionScriptCommandNoArgs):
     """
 
     _opcode = 0x21
+
+
+# Backwards-compat alias for the previous class name.
+A_BPL262728 = A_KillAllSubroutineSlots
 
 
 class A_BMI262728(UsableActionScriptCommand, ActionScriptCommandNoArgs):

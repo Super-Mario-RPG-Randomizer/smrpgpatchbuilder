@@ -177,6 +177,7 @@ from .commands import (
     A_SetPaletteRow,
     A_IncPaletteRowBy,
     A_IncPaletteRow,
+    A_KillAllSubroutineSlots,
     A_BPL262728,
     A_BMI262728,
     A_BPL2627,
