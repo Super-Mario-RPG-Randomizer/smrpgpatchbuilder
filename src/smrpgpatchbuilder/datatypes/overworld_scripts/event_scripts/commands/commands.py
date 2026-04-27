@@ -2570,20 +2570,28 @@ class CopyVarToVar(UsableEventScriptCommand, EventScriptCommand):
 
 
 class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand):
-    """Darken the level background and all NPCs except the palette rows whose bit is
-    set in `preserve_rows_mask`. The handler at $C0:4FD9 stores `fade_arg` into the
-    fade-depth control word ($318B / $318C / $318E) and `preserve_rows_mask` into the
-    palette-row exclusion bitmask ($003185). The palette processor at $C0:3AEE walks 8
-    rows and skips any row whose mask bit is set, leaving only the unmasked rows
+    """Darken the level background and all NPCs except the sprite palette rows listed
+    in `preserve_rows`. The handler at $C0:4FD9 stores `fade_arg` into the fade-depth
+    control word ($318B / $318C / $318E) and an 8-bit exclusion bitmask into $003185.
+    The palette processor at $C0:3AEE walks 8 rows (the OBJ palette set, rows 8-15)
+    and skips any row whose bit is set in the bitmask, leaving only the unmasked rows
     darkened.
 
-    **Important:** the mask targets palette rows, not NPC indices. When a room's
-    `ally_sprite_buffer_size` is increased (e.g. when the protagonist needs more VRAM
-    for tilemap molds), every NPC palette row shifts by the same delta, so this mask
-    must shift left by the same delta to keep targeting the same NPCs.
+    The 8 mask bits correspond to the OBJ palette rows in order:
 
-    Bit `n` of `preserve_rows_mask` corresponds to palette row `n`. Bit set = preserve
-    (skip darkening); bit clear = darken normally.
+        bit 0 → MARIO_PALETTE        (PaletteRow 8 — the player)
+        bit 1 → NPC_PALETTE_ROW_1    (PaletteRow 9)
+        bit 2 → NPC_PALETTE_ROW_2    (PaletteRow 10)
+        bit 3 → NPC_PALETTE_ROW_3    (PaletteRow 11)
+        bit 4 → NPC_PALETTE_ROW_4    (PaletteRow 12)
+        bit 5 → NPC_PALETTE_ROW_5    (PaletteRow 13)
+        bit 6 → NPC_PALETTE_ROW_6    (PaletteRow 14)
+        bit 7 → NPC_PALETTE_ROW_7    (PaletteRow 15)
+
+    **Note on ally-buffer growth:** when a room's `ally_sprite_buffer_size` increases
+    (e.g. for non-Mario protagonists with tilemap molds), every NPC palette row shifts
+    by the same delta, so the NPC entries in `preserve_rows` must shift forward by the
+    same delta to keep targeting the same NPCs. `MARIO_PALETTE` does not shift.
 
     The middle arg byte is filler, ignored by the handler.
 
@@ -2599,19 +2607,21 @@ class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand
     Args:
         fade_arg (int): 8-bit fade-depth control. Low 6 bits → $318B (fade depth);
             high 2 bits → $318C / $318E (fade-mode bits).
+        preserve_rows (list[PaletteRow]): Palette rows to preserve from the darken
+            effect. Each entry must be `MARIO_PALETTE` or `NPC_PALETTE_ROW_1` through
+            `NPC_PALETTE_ROW_7` (PaletteRow values 8-15). Empty list = darken all rows.
         filler (int): Ignored by the handler. Set to 0 unless preserving original
             byte sequences.
-        preserve_rows_mask (int): 8-bit palette-row exclusion bitmask. Bit n set =
-            palette row n is preserved (not darkened).
         identifier (str | None): Give this command a label if you want another
             command to jump to it.
     """
 
     _opcode = bytearray([0xFD, 0x8E])
     _size: int = 5
+    _OBJ_PALETTE_BASE = 8  # PaletteRow(8) = MARIO_PALETTE = bit 0 of the mask.
     _fade_arg: UInt8
     _filler: UInt8
-    _preserve_rows_mask: UInt8
+    _preserve_rows: list[PaletteRow]
 
     @property
     def fade_arg(self) -> UInt8:
@@ -2632,25 +2642,50 @@ class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand
         self._filler = UInt8(filler)
 
     @property
-    def preserve_rows_mask(self) -> UInt8:
-        """8-bit palette-row exclusion mask. Bit n set = preserve palette row n."""
-        return self._preserve_rows_mask
+    def preserve_rows(self) -> list[PaletteRow]:
+        """Palette rows that the fade should preserve. Always sorted ascending."""
+        return sorted(self._preserve_rows)
 
-    def set_preserve_rows_mask(self, preserve_rows_mask: int) -> None:
-        """Set the 8-bit palette-row exclusion mask."""
-        self._preserve_rows_mask = UInt8(preserve_rows_mask)
+    def set_preserve_rows(self, preserve_rows: list[PaletteRow | int]) -> None:
+        """Set the palette rows to preserve. Each entry must be a PaletteRow in
+        the OBJ range (8-15)."""
+        rows: list[PaletteRow] = []
+        seen: set[int] = set()
+        for r in preserve_rows:
+            row = PaletteRow(r)
+            if not (
+                self._OBJ_PALETTE_BASE <= row <= self._OBJ_PALETTE_BASE + 7
+            ):
+                raise InvalidCommandArgumentException(
+                    f"DarkenLayersExceptPaletteRows preserve_rows entries must be "
+                    f"MARIO_PALETTE or NPC_PALETTE_ROW_1 through NPC_PALETTE_ROW_7 "
+                    f"(PaletteRow {self._OBJ_PALETTE_BASE} through "
+                    f"{self._OBJ_PALETTE_BASE + 7}); got PaletteRow {int(row)}"
+                )
+            if int(row) not in seen:
+                rows.append(row)
+                seen.add(int(row))
+        self._preserve_rows = rows
+
+    @property
+    def preserve_rows_mask(self) -> UInt8:
+        """The 8-bit bitmask written to $003185 (derived from `preserve_rows`)."""
+        mask = 0
+        for row in self._preserve_rows:
+            mask |= 1 << (int(row) - self._OBJ_PALETTE_BASE)
+        return UInt8(mask)
 
     def __init__(
         self,
         fade_arg: int,
-        preserve_rows_mask: int,
+        preserve_rows: list[PaletteRow | int],
         filler: int = 0,
         identifier: str | None = None,
     ) -> None:
         super().__init__(identifier)
         self.set_fade_arg(fade_arg)
         self.set_filler(filler)
-        self.set_preserve_rows_mask(preserve_rows_mask)
+        self.set_preserve_rows(preserve_rows)
 
     def render(self, *args) -> bytearray:
         return super().render(self.fade_arg, self.filler, self.preserve_rows_mask)
