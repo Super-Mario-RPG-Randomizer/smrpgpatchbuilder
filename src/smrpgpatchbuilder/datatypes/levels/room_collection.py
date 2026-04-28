@@ -616,12 +616,16 @@ class RoomCollection:
         exit_patches = self._render_exits()
         patches.update(exit_patches)
 
-        # Render area map effectsNPC byte (byte 16 of each 18-byte area map record)
+        # Render area map effectsNPC byte (byte 16 of each 18-byte area map record).
+        # Always write — explicitly setting EffectsNpc.NOTHING (0x00) must overwrite
+        # any non-zero vanilla value, otherwise NOTHING silently leaves the original
+        # ROM byte intact.
         area_map_base = 0x1D0040
         for room_idx, room in enumerate(self._rooms):
-            if room is not None and room.effects_npc != 0:
-                offset = area_map_base + (room_idx * 18) + 16
-                patches[offset] = bytearray([room.effects_npc])
+            if room is None:
+                continue
+            offset = area_map_base + (room_idx * 18) + 16
+            patches[offset] = bytearray([room.effects_npc])
 
         return patches
 
