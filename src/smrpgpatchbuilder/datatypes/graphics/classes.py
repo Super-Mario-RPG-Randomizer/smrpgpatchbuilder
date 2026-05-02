@@ -1015,7 +1015,16 @@ class SpriteCollection:
                             extra_tiles.append(this_tile)
                     tile_groups[tile_key].extra.extend(extra_tiles)
 
-            wip_sprites[sprite_index].relative_offset = lowest_subtile_index
+            # Image-table dedup: prefer relative_offset=0 when the sprite's
+            # highest tile index already fits in 9-bit subtile space. Sprites
+            # in the same tile group then share graphics_pointer = group_offset
+            # (instead of group_offset + lowest * 0x20), so two sprites that
+            # share a tile group AND a palette dedupe to a single image entry.
+            # Only window when actually needed for overflow (highest > 510).
+            if len(sprite.tiles) > 0 and highest_subtile_index <= 510:
+                wip_sprites[sprite_index].relative_offset = 0
+            else:
+                wip_sprites[sprite_index].relative_offset = lowest_subtile_index
 
         # Post-mitigation validation: verify all sprites' tile ranges actually fit
         # in 9 bits after extras from other sprites may have grown the group.
@@ -1091,7 +1100,13 @@ class SpriteCollection:
                 # Forced sprites must keep subtile_subtract = 0 so they all
                 # share the same offset and thus the same image ID.
                 subtile_subtract = 0
-            elif len(available_tiles) > 510:
+            elif highest_subtile_index > 510:
+                # Only window when this sprite's tiles actually overflow 9-bit
+                # subtile space. Using available_tiles size as the trigger was
+                # too aggressive: it forced per-sprite windowing whenever the
+                # group was big, even when the sprite's own tiles fit fine,
+                # which prevented image-table dedup for sprites that share a
+                # tile group + palette but have non-zero lowest_subtile_index.
                 subtile_subtract = lowest_subtile_index
             else:
                 subtile_subtract = 0
