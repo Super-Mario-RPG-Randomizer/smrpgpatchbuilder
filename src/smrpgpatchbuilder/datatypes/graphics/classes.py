@@ -20,15 +20,56 @@ class AnimationSequenceFrame:
         self.duration = duration
         self.mold_id = mold_id
 
+
+SPEED_TO_RATIO: dict[SequenceSpeed, float] = {
+    VERY_SLOW: 0.25,
+    SLOW: 0.5,
+    NORMAL: 1.0,
+    FAST: 2.0,
+    FASTER: 8/3,
+    VERY_FAST: 4,
+    FASTEST: 8
+}
+
 class AnimationSequence:
     frames: list[AnimationSequenceFrame] = []
-    def __init__(self, frames: list[AnimationSequenceFrame]):
+    _contact_frame: int | None = None
+    def __init__(self, frames: list[AnimationSequenceFrame], contact_frame = None):
         self.frames = frames
+        if contact_frame is not None:
+            assert contact_frame < self.total_duration, "contact frame must be less than total duration of the sequence"
+            self._contact_frame = contact_frame
 
     @property
-    def total_duration(self) -> int:
+    def contact_frame(self, speed: SequenceSpeed = NORMAL) -> int:
+        return math.ceil(self._contact_frame / SPEED_TO_RATIO[speed])
+
+    @property
+    def total_duration(self, speed: SequenceSpeed = NORMAL) -> int:
         """Sum of all frame durations in this sequence."""
-        return sum(frame.duration for frame in self.frames)
+        return math.ceil(sum(frame.duration for frame in self.frames) / SPEED_TO_RATIO[speed])
+
+    @property
+    def target_speed_by_duration_limit(self, duration_limit: int, include_slowdown: bool = False) -> SequenceSpeed:
+        """Returns the fastest speed at which this sequence's total duration does not exceed the given limit."""
+        if include_slowdown:
+            speeds = [VERY_SLOW, SLOW, NORMAL, FAST, FASTER, VERY_FAST, FASTEST]
+        for speed in speeds:
+            if self.total_duration(speed) <= duration_limit:
+                return speed
+        return VERY_SLOW
+    
+    @property
+    def target_speed_by_contact_frame_limit(self, duration_limit: int, include_slowdown: bool = False) -> SequenceSpeed:
+        """Returns the fastest speed at which this sequence's total duration does not exceed the given limit."""
+        speeds = [NORMAL, FAST, FASTER, VERY_FAST, FASTEST]
+        if include_slowdown:
+            speeds = [VERY_SLOW, SLOW, NORMAL, FAST, FASTER, VERY_FAST, FASTEST]
+        for speed in speeds:
+            if self.contact_frame(speed) <= duration_limit:
+                return speed
+        return VERY_SLOW
+
 
 class Tile:
     mirror: bool = False
