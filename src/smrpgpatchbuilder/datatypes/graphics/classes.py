@@ -1607,12 +1607,25 @@ class SpriteCollection:
                 )
 
             # get animation #, or create new
+            #
+            # Animation dedup requires matching tile_group AND relative_offset.
+            # The previous sprite's animation has subtile_ids resolved against
+            # its own (tile_group, relative_offset) view of available_tiles.
+            # Reusing those subtile_ids is only safe when this sprite reads
+            # from the same physical tile region — otherwise the subtile_ids
+            # alias to whatever bytes happen to sit at those indices in this
+            # sprite's tile group, producing visibly wrong graphics.
             animation_num_to_use = len(complete_animations)
             for prev_sprite_index, prev_sprite in enumerate(
                 wip_sprites[0:sprite_index]
             ):
-                if is_same_animation(
-                    sprite.sprite_data.animation, prev_sprite.sprite_data.animation
+                if (
+                    is_same_animation(
+                        sprite.sprite_data.animation,
+                        prev_sprite.sprite_data.animation,
+                    )
+                    and sprite.tile_group == prev_sprite.tile_group
+                    and sprite.relative_offset == prev_sprite.relative_offset
                 ):
                     animation_num_to_use = complete_sprites[
                         prev_sprite_index
