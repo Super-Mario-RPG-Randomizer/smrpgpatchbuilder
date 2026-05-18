@@ -224,6 +224,12 @@ class RoomCollection:
             else:
                 unique_npcs[0] = self._force_first_npc
             reserved_indices.add(0)
+            # Index 0 is now occupied. If no force_id NPCs bumped min_table_size,
+            # it stays 0 and the allocator below (which seeds next_index_after_forced
+            # and available_indices from min_table_size) would hand out index 0 again,
+            # overwriting force_first_npc. Reserve at least one slot for it.
+            if min_table_size == 0:
+                min_table_size = 1
 
         # Track which signatures have been placed via force_id
         sig_to_forced_index: dict[tuple, int] = {}
