@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "smrpgpatchbuilder"
-version = "6.2.6"
+version = "6.2.7"
 authors = [
   { name="pidgezero_one", email="s.kischak@gmail.com" },
 ]

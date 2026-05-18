@@ -238,6 +238,8 @@ src/smrpgpatchbuilder/utils/strings.py
 src/tests/animations/test_animationscripts.py
 src/tests/dialogs/__init__.py
 src/tests/dialogs/test_formatter.py
+src/tests/levels/__init__.py
+src/tests/levels/test_room_collection.py
 src/tests/monsters/test_ai.py
 src/tests/overworld/test_actionscripts.py
 src/tests/overworld/test_eventscripts.py
