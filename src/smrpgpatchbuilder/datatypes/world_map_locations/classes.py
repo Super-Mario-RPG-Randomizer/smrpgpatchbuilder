@@ -6,6 +6,7 @@ from smrpgpatchbuilder.datatypes.overworld_scripts.arguments.types.flag import F
 WORLD_MAP_LOCATION_BASE_ADDRESS = 0x3EF830
 WORLD_MAP_NAME_POINTER_BASE_ADDRESS = 0x3EFD00
 WORLD_MAP_NAME_DATA_BASE_ADDRESS = 0x3EFD80
+WORLD_MAP_NAME_DATA_END_ADDRESS = 0x3EFF1F  # last byte usable for name data
 TOTAL_WORLD_MAP_LOCATIONS = 56
 
 class WorldMapLocation:
@@ -471,4 +472,82 @@ class WorldMapLocationCollection:
             location_patch = location.render()
             patch.update(location_patch)
 
+        patch.update(self._render_names())
+
         return patch
+
+    def _render_names(self) -> dict[int, bytearray]:
+        """Render the location-name pointer table and name data.
+
+        The world map shows each location's name. The engine reads a name via a
+        2-byte little-endian pointer at
+        ``WORLD_MAP_NAME_POINTER_BASE_ADDRESS + index * 2`` (an offset added to
+        ``WORLD_MAP_NAME_DATA_BASE_ADDRESS``); the name bytes are stored as the
+        location-name font's character codes (ASCII for the built-in glyphs)
+        terminated by ``0x06``.
+
+        Names are packed with **suffix de-duplication**: when one location's
+        name is an exact trailing substring of another's (e.g. "Bowser's Keep"
+        within "To Bowser's Keep"), it reuses the longer name's bytes and its
+        pointer aims partway into them. This mirrors the original editor's
+        packing so the table fits its ``0x3EFD80``-``0x3EFF1F`` budget.
+        """
+        count = len(self._locations)
+        names: list[bytes] = [b""] * count
+        for location in self._locations:
+            names[location.index] = location.name.encode("latin-1")
+
+        # Mark name `a` a duplicate of a non-duplicate name `i` when `a` equals
+        # the suffix of `i` beginning at offset `b`.
+        is_dup = [False] * count
+        dup_of = [0] * count
+        level = [0] * count
+        for i in range(count):
+            if is_dup[i]:
+                continue
+            for a in range(count):
+                if a == i or is_dup[a]:
+                    continue
+                candidate = names[a]
+                for b in range(len(names[i])):
+                    remaining = len(names[i]) - b
+                    if len(candidate) == remaining:
+                        if names[i][b:] == candidate:
+                            level[a] = b
+                            dup_of[a] = i
+                            is_dup[a] = True
+                            break
+                    elif len(candidate) > remaining:
+                        break
+
+        # Write the unique names first so duplicate pointers can reference them.
+        pointer_table = bytearray(count * 2)
+        name_data = bytearray()
+        pointers = [0] * count
+        running = 0
+        for i in range(count):
+            if not is_dup[i]:
+                pointers[i] = running
+                pointer_table[i * 2] = running & 0xFF
+                pointer_table[i * 2 + 1] = (running >> 8) & 0xFF
+                name_data += names[i]
+                name_data.append(0x06)
+                running += len(names[i]) + 1
+        for i in range(count):
+            if is_dup[i]:
+                pointers[i] = pointers[dup_of[i]] + level[i]
+                pointer_table[i * 2] = pointers[i] & 0xFF
+                pointer_table[i * 2 + 1] = (pointers[i] >> 8) & 0xFF
+
+        end = WORLD_MAP_NAME_DATA_BASE_ADDRESS + len(name_data) - 1
+        if end > WORLD_MAP_NAME_DATA_END_ADDRESS:
+            raise ValueError(
+                "World map location names exceed the available name-data region "
+                f"(need {len(name_data)} bytes, ends at {end:#06X} > "
+                f"{WORLD_MAP_NAME_DATA_END_ADDRESS:#06X}); shorten one or more names."
+            )
+
+        return {
+            WORLD_MAP_NAME_POINTER_BASE_ADDRESS: pointer_table,
+            WORLD_MAP_NAME_DATA_BASE_ADDRESS: name_data,
+        }
