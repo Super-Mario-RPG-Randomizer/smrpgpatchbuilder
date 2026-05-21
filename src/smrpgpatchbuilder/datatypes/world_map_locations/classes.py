@@ -539,13 +539,19 @@ class WorldMapLocationCollection:
                 pointer_table[i * 2] = pointers[i] & 0xFF
                 pointer_table[i * 2 + 1] = (pointers[i] >> 8) & 0xFF
 
-        end = WORLD_MAP_NAME_DATA_BASE_ADDRESS + len(name_data) - 1
-        if end > WORLD_MAP_NAME_DATA_END_ADDRESS:
+        region_size = (
+            WORLD_MAP_NAME_DATA_END_ADDRESS - WORLD_MAP_NAME_DATA_BASE_ADDRESS + 1
+        )
+        if len(name_data) > region_size:
             raise ValueError(
                 "World map location names exceed the available name-data region "
-                f"(need {len(name_data)} bytes, ends at {end:#06X} > "
-                f"{WORLD_MAP_NAME_DATA_END_ADDRESS:#06X}); shorten one or more names."
+                f"(need {len(name_data)} bytes, region holds {region_size}); "
+                "shorten one or more names."
             )
+        # Fill the remaining (pointer-unreferenced) bytes of the name-data region
+        # with the 0x06 terminator so the whole region is emitted deterministically
+        # and matches the original packed layout byte-for-byte.
+        name_data += bytearray(b"\x06" * (region_size - len(name_data)))
 
         return {
             WORLD_MAP_NAME_POINTER_BASE_ADDRESS: pointer_table,
