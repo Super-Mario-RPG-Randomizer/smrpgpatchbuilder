@@ -49,11 +49,8 @@ class Command(BaseCommand):
                 priority0 = (raw_data[2] & 0x20) == 0x20 # bit 5
                 priority1 = (raw_data[2] & 0x40) == 0x40 # bit 6
                 priority2 = (raw_data[2] & 0x80) == 0x80 # bit 7
-                byte2_bit0 = (raw_data[2] & 0x01) == 0x01 # bit 0
-                byte2_bit1 = (raw_data[2] & 0x02) == 0x02 # bit 1
-                byte2_bit2 = (raw_data[2] & 0x04) == 0x04 # bit 2
-                byte2_bit3 = (raw_data[2] & 0x08) == 0x08 # bit 3
-                byte2_bit4 = (raw_data[2] & 0x10) == 0x10 # bit 4
+                extra_palette_source_offset = raw_data[2] & 0x07 # bits 0-2 (palette source offset M)
+                extra_palette_row_count = (raw_data[2] >> 3) & 0x03 # bits 3-4 (extra palette row count N)
                 
                 y_pixel_shift = raw_data[3] & 0x0F
                 shift_16_px_down = (raw_data[3] & 0x10) == 0x10 # bit 4
@@ -85,11 +82,8 @@ class Command(BaseCommand):
                 writeline(file, '  "vram_store": %s,' % vram_store)
                 writeline(file, '  "vram_size": %i,' % vram_size)
                 writeline(file, '  "cannot_clone": %r,' % cannot_clone)
-                writeline(file, '  "byte2_bit0": %r,' % byte2_bit0)
-                writeline(file, '  "byte2_bit1": %r,' % byte2_bit1)
-                writeline(file, '  "byte2_bit2": %r,' % byte2_bit2)
-                writeline(file, '  "byte2_bit3": %r,' % byte2_bit3)
-                writeline(file, '  "byte2_bit4": %r,' % byte2_bit4)
+                writeline(file, '  "extra_palette_source_offset": %i,' % extra_palette_source_offset)
+                writeline(file, '  "extra_palette_row_count": %i,' % extra_palette_row_count)
                 writeline(file, '  "byte5_bit6": %r,' % byte5_bit6)
                 writeline(file, '  "byte5_bit7": %r,' % byte5_bit7)
                 writeline(file, '  "byte6_bit2": %r' % byte6_bit2)

@@ -468,25 +468,13 @@ class Command(BaseCommand):
                     objects_output += "\n        cannot_clone=%s," % (
                         "True" if o.model.cannot_clone else "False"
                     )
-                    if o.model._byte2_bit0 != None:
-                        objects_output += "\n        byte2_bit0=%s," % (
-                            "True" if o.model._byte2_bit0 else "False"
+                    if o.model._extra_palette_source_offset != None:
+                        objects_output += "\n        extra_palette_source_offset=%i," % (
+                            o.model._extra_palette_source_offset
                         )
-                    if o.model._byte2_bit1 != None:
-                        objects_output += "\n        byte2_bit1=%s," % (
-                            "True" if o.model._byte2_bit1 else "False"
-                        )
-                    if o.model._byte2_bit2 != None:
-                        objects_output += "\n        byte2_bit2=%s," % (
-                            "True" if o.model._byte2_bit2 else "False"
-                        )
-                    if o.model._byte2_bit3 != None:
-                        objects_output += "\n        byte2_bit3=%s," % (
-                            "True" if o.model._byte2_bit3 else "False"
-                        )
-                    if o.model._byte2_bit4 != None:
-                        objects_output += "\n        byte2_bit4=%s," % (
-                            "True" if o.model._byte2_bit4 else "False"
+                    if o.model._extra_palette_row_count != None:
+                        objects_output += "\n        extra_palette_row_count=%i," % (
+                            o.model._extra_palette_row_count
                         )
                     if o.model._byte5_bit6 != None:
                         objects_output += "\n        byte5_bit6=%s," % (

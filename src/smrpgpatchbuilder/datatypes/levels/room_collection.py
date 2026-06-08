@@ -71,11 +71,8 @@ class RoomCollection:
             npc.priority_1,
             npc.priority_2,
             npc.cannot_clone,
-            npc.byte2_bit0,
-            npc.byte2_bit1,
-            npc.byte2_bit2,
-            npc.byte2_bit3,
-            npc.byte2_bit4,
+            npc.extra_palette_source_offset,
+            npc.extra_palette_row_count,
             npc.byte5_bit6,
             npc.byte5_bit7,
             npc.byte6_bit2,
@@ -105,11 +102,8 @@ class RoomCollection:
                         if room_obj.cannot_clone is not None
                         else None
                     ),
-                    room_obj.byte2_bit0 if room_obj.byte2_bit0 is not None else None,
-                    room_obj.byte2_bit1 if room_obj.byte2_bit1 is not None else None,
-                    room_obj.byte2_bit2 if room_obj.byte2_bit2 is not None else None,
-                    room_obj.byte2_bit3 if room_obj.byte2_bit3 is not None else None,
-                    room_obj.byte2_bit4 if room_obj.byte2_bit4 is not None else None,
+                    room_obj.extra_palette_source_offset if room_obj.extra_palette_source_offset is not None else None,
+                    room_obj.extra_palette_row_count if room_obj.extra_palette_row_count is not None else None,
                     room_obj.byte5_bit6 if room_obj.byte5_bit6 is not None else None,
                     room_obj.byte5_bit7 if room_obj.byte5_bit7 is not None else None,
                     room_obj.byte6_bit2 if room_obj.byte6_bit2 is not None else None,
@@ -455,30 +449,15 @@ class RoomCollection:
                 if room_obj.cannot_clone is not None
                 else base_npc.cannot_clone
             ),
-            byte2_bit0=(
-                room_obj.byte2_bit0
-                if room_obj.byte2_bit0 is not None
-                else base_npc.byte2_bit0
+            extra_palette_source_offset=(
+                room_obj.extra_palette_source_offset
+                if room_obj.extra_palette_source_offset is not None
+                else base_npc.extra_palette_source_offset
             ),
-            byte2_bit1=(
-                room_obj.byte2_bit1
-                if room_obj.byte2_bit1 is not None
-                else base_npc.byte2_bit1
-            ),
-            byte2_bit2=(
-                room_obj.byte2_bit2
-                if room_obj.byte2_bit2 is not None
-                else base_npc.byte2_bit2
-            ),
-            byte2_bit3=(
-                room_obj.byte2_bit3
-                if room_obj.byte2_bit3 is not None
-                else base_npc.byte2_bit3
-            ),
-            byte2_bit4=(
-                room_obj.byte2_bit4
-                if room_obj.byte2_bit4 is not None
-                else base_npc.byte2_bit4
+            extra_palette_row_count=(
+                room_obj.extra_palette_row_count
+                if room_obj.extra_palette_row_count is not None
+                else base_npc.extra_palette_row_count
             ),
             byte5_bit6=(
                 room_obj.byte5_bit6
@@ -673,11 +652,8 @@ class RoomCollection:
 
         # Byte 2: priority and misc bits
         data[2] = (
-            (1 if npc.byte2_bit0 else 0)
-            | ((1 if npc.byte2_bit1 else 0) << 1)
-            | ((1 if npc.byte2_bit2 else 0) << 2)
-            | ((1 if npc.byte2_bit3 else 0) << 3)
-            | ((1 if npc.byte2_bit4 else 0) << 4)
+            ((npc.extra_palette_source_offset or 0) & 0x07)
+            | (((npc.extra_palette_row_count or 0) & 0x03) << 3)
             | ((1 if npc.priority_0 else 0) << 5)
             | ((1 if npc.priority_1 else 0) << 6)
             | ((1 if npc.priority_2 else 0) << 7)

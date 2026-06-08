@@ -826,11 +826,8 @@ class NPC:
     _min_vram_size: int = 0
     _cannot_clone: bool = False
 
-    _byte2_bit0: bool = False
-    _byte2_bit1: bool = False
-    _byte2_bit2: bool = False
-    _byte2_bit3: bool = False
-    _byte2_bit4: bool = False
+    _extra_palette_source_offset: int = 0
+    _extra_palette_row_count: int = 0
     _byte5_bit6: bool = False
     _byte5_bit7: bool = False
     _byte6_bit2: bool = False
@@ -889,43 +886,41 @@ class NPC:
         return self._show_shadow
 
     @property
-    def byte2_bit0(self) -> bool:
-        """(unknown)"""
-        return self._byte2_bit0
+    def extra_palette_source_offset(self) -> int:
+        """Palette-load source offset M (0-7). When extra palette rows are loaded (see
+        extra_palette_row_count), the first extra CGRAM row is sourced from this sprite's
+        base palette ID + M. Pair a nonzero offset with a nonzero row count so
+        A_IncPaletteRowBy / A_SetPaletteRow recolors to the NEXT palette, not a duplicate
+        of the base. Packed into NPC mold byte 2 bits 0-2; read by the overworld
+        sprite-palette loader at $C0:9DB6. (Formerly byte2_bit0/1/2.)"""
+        return self._extra_palette_source_offset
 
     @property
-    def byte2_bit1(self) -> bool:
-        """(unknown)"""
-        return self._byte2_bit1
-
-    @property
-    def byte2_bit2(self) -> bool:
-        """(unknown)"""
-        return self._byte2_bit2
-
-    @property
-    def byte2_bit3(self) -> bool:
-        """(unknown)"""
-        return self._byte2_bit3
-
-    @property
-    def byte2_bit4(self) -> bool:
-        """(unknown)"""
-        return self._byte2_bit4
+    def extra_palette_row_count(self) -> int:
+        """Number of extra palette rows N (0-3) loaded into CGRAM after the sprite's base
+        palette. N=0 loads only the base palette (no recolor -- an A_IncPaletteRowBy would
+        spill into the next sprite's palette row). Packed into NPC mold byte 2 bits 3-4;
+        read by the sprite-palette loader at $C0:9DA8. (Formerly byte2_bit3/4.)"""
+        return self._extra_palette_row_count
 
     @property
     def byte5_bit6(self) -> bool:
-        """(unknown)"""
+        """Physical-field default. Loaded into object RAM $0E bit 4 by the NPC loader at
+        $C0:8D45. Part of the sprite's background-layer overlap / collision ("physical
+        field") data; precise runtime effect is undocumented."""
         return self._byte5_bit6
 
     @property
     def byte5_bit7(self) -> bool:
-        """(unknown)"""
+        """Physical-field default. Loaded into object RAM $0E bit 5 by the NPC loader at
+        $C0:8D45. See byte5_bit6."""
         return self._byte5_bit7
 
     @property
     def byte6_bit2(self) -> bool:
-        """(unknown)"""
+        """Physical-field default. Loaded into object RAM $0D bit 2 by the NPC loader at
+        $C0:8D70 (that low nibble is also writable at runtime by action opcode 0x11). Part
+        of the sprite's "physical field" data; precise runtime effect is undocumented."""
         return self._byte6_bit2
 
     @property
@@ -995,25 +990,15 @@ class NPC:
         """Set whether a shadow for the NPC when airborne will be loaded to VRAM."""
         self._show_shadow = show_shadow
 
-    def set_byte2_bit0(self, byte2_bit0: bool) -> None:
-        """(unknown)"""
-        self._byte2_bit0 = byte2_bit0
+    def set_extra_palette_source_offset(self, extra_palette_source_offset: int) -> None:
+        """Set the palette-load source offset M (0-7)."""
+        assert 0 <= extra_palette_source_offset <= 7
+        self._extra_palette_source_offset = extra_palette_source_offset
 
-    def set_byte2_bit1(self, byte2_bit1: bool) -> None:
-        """(unknown)"""
-        self._byte2_bit1 = byte2_bit1
-
-    def set_byte2_bit2(self, byte2_bit2: bool) -> None:
-        """(unknown)"""
-        self._byte2_bit2 = byte2_bit2
-
-    def set_byte2_bit3(self, byte2_bit3: bool) -> None:
-        """(unknown)"""
-        self._byte2_bit3 = byte2_bit3
-
-    def set_byte2_bit4(self, byte2_bit4: bool) -> None:
-        """(unknown)"""
-        self._byte2_bit4 = byte2_bit4
+    def set_extra_palette_row_count(self, extra_palette_row_count: int) -> None:
+        """Set the number of extra palette rows N (0-3)."""
+        assert 0 <= extra_palette_row_count <= 3
+        self._extra_palette_row_count = extra_palette_row_count
 
     def set_byte5_bit6(self, byte5_bit6: bool) -> None:
         """(unknown)"""
@@ -1066,11 +1051,8 @@ class NPC:
                  priority_1: bool = False,
                  priority_2: bool = True,
                  cannot_clone: bool = False,
-                 byte2_bit0: bool = False,
-                 byte2_bit1: bool = False,
-                 byte2_bit2: bool = False,
-                 byte2_bit3: bool = False,
-                 byte2_bit4: bool = False,
+                 extra_palette_source_offset: int = 0,
+                 extra_palette_row_count: int = 0,
                  byte5_bit6: bool = False,
                  byte5_bit7: bool = False,
                  byte6_bit2: bool = False,
@@ -1088,11 +1070,8 @@ class NPC:
         self._priority_1 = priority_1
         self._priority_2 = priority_2
         self._cannot_clone = cannot_clone
-        self._byte2_bit0 = byte2_bit0
-        self._byte2_bit1 = byte2_bit1
-        self._byte2_bit2 = byte2_bit2
-        self._byte2_bit3 = byte2_bit3
-        self._byte2_bit4 = byte2_bit4
+        self.set_extra_palette_source_offset(extra_palette_source_offset)
+        self.set_extra_palette_row_count(extra_palette_row_count)
         self._byte5_bit6 = byte5_bit6
         self._byte5_bit7 = byte5_bit7
         self._byte6_bit2 = byte6_bit2
@@ -1129,11 +1108,8 @@ class BaseRoomObject:
     _cannot_clone: bool | None = None
 
     # Unknown bit flags
-    _byte2_bit0: bool | None = None
-    _byte2_bit1: bool | None = None
-    _byte2_bit2: bool | None = None
-    _byte2_bit3: bool | None = None
-    _byte2_bit4: bool | None = None
+    _extra_palette_source_offset: int | None = None
+    _extra_palette_row_count: int | None = None
     _byte5_bit6: bool | None = None
     _byte5_bit7: bool | None = None
     _byte6_bit2: bool | None = None
@@ -1178,43 +1154,28 @@ class BaseRoomObject:
         return self._show_shadow
 
     @property
-    def byte2_bit0(self) -> bool | None:
-        """(unknown)"""
-        return self._byte2_bit0
+    def extra_palette_source_offset(self) -> int | None:
+        """Optional per-room override of the palette-load source offset M (0-7). See NPC.extra_palette_source_offset."""
+        return self._extra_palette_source_offset
 
     @property
-    def byte2_bit1(self) -> bool | None:
-        """(unknown)"""
-        return self._byte2_bit1
-
-    @property
-    def byte2_bit2(self) -> bool | None:
-        """(unknown)"""
-        return self._byte2_bit2
-
-    @property
-    def byte2_bit3(self) -> bool | None:
-        """(unknown)"""
-        return self._byte2_bit3
-
-    @property
-    def byte2_bit4(self) -> bool | None:
-        """(unknown)"""
-        return self._byte2_bit4
+    def extra_palette_row_count(self) -> int | None:
+        """Optional per-room override of the extra palette row count N (0-3). See NPC.extra_palette_row_count."""
+        return self._extra_palette_row_count
 
     @property
     def byte5_bit6(self) -> bool | None:
-        """(unknown)"""
+        """Optional per-room override of the physical-field bit at object RAM $0E bit 4. See NPC.byte5_bit6."""
         return self._byte5_bit6
 
     @property
     def byte5_bit7(self) -> bool | None:
-        """(unknown)"""
+        """Optional per-room override of the physical-field bit at object RAM $0E bit 5. See NPC.byte5_bit7."""
         return self._byte5_bit7
 
     @property
     def byte6_bit2(self) -> bool | None:
-        """(unknown)"""
+        """Optional per-room override of the physical-field bit at object RAM $0D bit 2. See NPC.byte6_bit2."""
         return self._byte6_bit2
 
     @property
@@ -1292,25 +1253,17 @@ class BaseRoomObject:
         """Set whether a shadow for the NPC when airborne will be loaded to VRAM."""
         self._show_shadow = show_shadow
 
-    def set_byte2_bit0(self, byte2_bit0: bool | None) -> None:
-        """(unknown)"""
-        self._byte2_bit0 = byte2_bit0
+    def set_extra_palette_source_offset(self, extra_palette_source_offset: int | None) -> None:
+        """Set the palette-load source offset M (0-7), or None to inherit the mold default."""
+        if extra_palette_source_offset is not None:
+            assert 0 <= extra_palette_source_offset <= 7
+        self._extra_palette_source_offset = extra_palette_source_offset
 
-    def set_byte2_bit1(self, byte2_bit1: bool | None) -> None:
-        """(unknown)"""
-        self._byte2_bit1 = byte2_bit1
-
-    def set_byte2_bit2(self, byte2_bit2: bool | None) -> None:
-        """(unknown)"""
-        self._byte2_bit2 = byte2_bit2
-
-    def set_byte2_bit3(self, byte2_bit3: bool | None) -> None:
-        """(unknown)"""
-        self._byte2_bit3 = byte2_bit3
-
-    def set_byte2_bit4(self, byte2_bit4: bool | None) -> None:
-        """(unknown)"""
-        self._byte2_bit4 = byte2_bit4
+    def set_extra_palette_row_count(self, extra_palette_row_count: int | None) -> None:
+        """Set the number of extra palette rows N (0-3), or None to inherit the mold default."""
+        if extra_palette_row_count is not None:
+            assert 0 <= extra_palette_row_count <= 3
+        self._extra_palette_row_count = extra_palette_row_count
 
     def set_byte5_bit6(self, byte5_bit6: bool | None) -> None:
         """(unknown)"""
@@ -1704,11 +1657,8 @@ class BattlePackNPC(RoomObject):
         directions: VramStore | None = None,
         vram_size: int | None = None,
         cannot_clone: bool | None = None,
-        byte2_bit0: bool | None = None,
-        byte2_bit1: bool | None = None,
-        byte2_bit2: bool | None = None,
-        byte2_bit3: bool | None = None,
-        byte2_bit4: bool | None = None,
+        extra_palette_source_offset: int | None = None,
+        extra_palette_row_count: int | None = None,
         byte5_bit6: bool | None = None,
         byte5_bit7: bool | None = None,
         byte6_bit2: bool | None = None,
@@ -1755,11 +1705,8 @@ class BattlePackNPC(RoomObject):
         super().set_directions(directions)
         super().set_min_vram_size(vram_size)
         super().set_cannot_clone(cannot_clone)
-        super().set_byte2_bit0(byte2_bit0)
-        super().set_byte2_bit1(byte2_bit1)
-        super().set_byte2_bit2(byte2_bit2)
-        super().set_byte2_bit3(byte2_bit3)
-        super().set_byte2_bit4(byte2_bit4)
+        super().set_extra_palette_source_offset(extra_palette_source_offset)
+        super().set_extra_palette_row_count(extra_palette_row_count)
         super().set_byte5_bit6(byte5_bit6)
         super().set_byte5_bit7(byte5_bit7)
         super().set_byte6_bit2(byte6_bit2)
@@ -1823,11 +1770,8 @@ class RegularNPC(RoomObject):
         directions: VramStore | None = None,
         vram_size: int | None = None,
         cannot_clone: bool | None = None,
-        byte2_bit0: bool | None = None,
-        byte2_bit1: bool | None = None,
-        byte2_bit2: bool | None = None,
-        byte2_bit3: bool | None = None,
-        byte2_bit4: bool | None = None,
+        extra_palette_source_offset: int | None = None,
+        extra_palette_row_count: int | None = None,
         byte5_bit6: bool | None = None,
         byte5_bit7: bool | None = None,
         byte6_bit2: bool | None = None,
@@ -1873,11 +1817,8 @@ class RegularNPC(RoomObject):
         super().set_directions(directions)
         super().set_min_vram_size(vram_size)
         super().set_cannot_clone(cannot_clone)
-        super().set_byte2_bit0(byte2_bit0)
-        super().set_byte2_bit1(byte2_bit1)
-        super().set_byte2_bit2(byte2_bit2)
-        super().set_byte2_bit3(byte2_bit3)
-        super().set_byte2_bit4(byte2_bit4)
+        super().set_extra_palette_source_offset(extra_palette_source_offset)
+        super().set_extra_palette_row_count(extra_palette_row_count)
         super().set_byte5_bit6(byte5_bit6)
         super().set_byte5_bit7(byte5_bit7)
         super().set_byte6_bit2(byte6_bit2)
@@ -1966,11 +1907,8 @@ class ChestNPC(RoomObject):
         directions: VramStore | None = None,
         vram_size: int | None = None,
         cannot_clone: bool | None = None,
-        byte2_bit0: bool | None = None,
-        byte2_bit1: bool | None = None,
-        byte2_bit2: bool | None = None,
-        byte2_bit3: bool | None = None,
-        byte2_bit4: bool | None = None,
+        extra_palette_source_offset: int | None = None,
+        extra_palette_row_count: int | None = None,
         byte5_bit6: bool | None = None,
         byte5_bit7: bool | None = None,
         byte6_bit2: bool | None = None,
@@ -2018,11 +1956,8 @@ class ChestNPC(RoomObject):
         super().set_directions(directions)
         super().set_min_vram_size(vram_size)
         super().set_cannot_clone(cannot_clone)
-        super().set_byte2_bit0(byte2_bit0)
-        super().set_byte2_bit1(byte2_bit1)
-        super().set_byte2_bit2(byte2_bit2)
-        super().set_byte2_bit3(byte2_bit3)
-        super().set_byte2_bit4(byte2_bit4)
+        super().set_extra_palette_source_offset(extra_palette_source_offset)
+        super().set_extra_palette_row_count(extra_palette_row_count)
         super().set_byte5_bit6(byte5_bit6)
         super().set_byte5_bit7(byte5_bit7)
         super().set_byte6_bit2(byte6_bit2)
@@ -2067,11 +2002,8 @@ class BattlePackClone(Clone):
         directions: VramStore | None = None,
         vram_size: int | None = None,
         cannot_clone: bool | None = None,
-        byte2_bit0: bool | None = None,
-        byte2_bit1: bool | None = None,
-        byte2_bit2: bool | None = None,
-        byte2_bit3: bool | None = None,
-        byte2_bit4: bool | None = None,
+        extra_palette_source_offset: int | None = None,
+        extra_palette_row_count: int | None = None,
         byte5_bit6: bool | None = None,
         byte5_bit7: bool | None = None,
         byte6_bit2: bool | None = None,
@@ -2099,11 +2031,8 @@ class BattlePackClone(Clone):
         super().set_directions(directions)
         super().set_min_vram_size(vram_size)
         super().set_cannot_clone(cannot_clone)
-        super().set_byte2_bit0(byte2_bit0)
-        super().set_byte2_bit1(byte2_bit1)
-        super().set_byte2_bit2(byte2_bit2)
-        super().set_byte2_bit3(byte2_bit3)
-        super().set_byte2_bit4(byte2_bit4)
+        super().set_extra_palette_source_offset(extra_palette_source_offset)
+        super().set_extra_palette_row_count(extra_palette_row_count)
         super().set_byte5_bit6(byte5_bit6)
         super().set_byte5_bit7(byte5_bit7)
         super().set_byte6_bit2(byte6_bit2)
@@ -2148,11 +2077,8 @@ class RegularClone(Clone):
         directions: VramStore | None = None,
         vram_size: int | None = None,
         cannot_clone: bool | None = None,
-        byte2_bit0: bool | None = None,
-        byte2_bit1: bool | None = None,
-        byte2_bit2: bool | None = None,
-        byte2_bit3: bool | None = None,
-        byte2_bit4: bool | None = None,
+        extra_palette_source_offset: int | None = None,
+        extra_palette_row_count: int | None = None,
         byte5_bit6: bool | None = None,
         byte5_bit7: bool | None = None,
         byte6_bit2: bool | None = None,
@@ -2180,11 +2106,8 @@ class RegularClone(Clone):
         super().set_directions(directions)
         super().set_min_vram_size(vram_size)
         super().set_cannot_clone(cannot_clone)
-        super().set_byte2_bit0(byte2_bit0)
-        super().set_byte2_bit1(byte2_bit1)
-        super().set_byte2_bit2(byte2_bit2)
-        super().set_byte2_bit3(byte2_bit3)
-        super().set_byte2_bit4(byte2_bit4)
+        super().set_extra_palette_source_offset(extra_palette_source_offset)
+        super().set_extra_palette_row_count(extra_palette_row_count)
         super().set_byte5_bit6(byte5_bit6)
         super().set_byte5_bit7(byte5_bit7)
         super().set_byte6_bit2(byte6_bit2)
@@ -2240,11 +2163,8 @@ class ChestClone(Clone):
         directions: VramStore | None = None,
         vram_size: int | None = None,
         cannot_clone: bool | None = None,
-        byte2_bit0: bool | None = None,
-        byte2_bit1: bool | None = None,
-        byte2_bit2: bool | None = None,
-        byte2_bit3: bool | None = None,
-        byte2_bit4: bool | None = None,
+        extra_palette_source_offset: int | None = None,
+        extra_palette_row_count: int | None = None,
         byte5_bit6: bool | None = None,
         byte5_bit7: bool | None = None,
         byte6_bit2: bool | None = None,
@@ -2272,11 +2192,8 @@ class ChestClone(Clone):
         super().set_directions(directions)
         super().set_min_vram_size(vram_size)
         super().set_cannot_clone(cannot_clone)
-        super().set_byte2_bit0(byte2_bit0)
-        super().set_byte2_bit1(byte2_bit1)
-        super().set_byte2_bit2(byte2_bit2)
-        super().set_byte2_bit3(byte2_bit3)
-        super().set_byte2_bit4(byte2_bit4)
+        super().set_extra_palette_source_offset(extra_palette_source_offset)
+        super().set_extra_palette_row_count(extra_palette_row_count)
         super().set_byte5_bit6(byte5_bit6)
         super().set_byte5_bit7(byte5_bit7)
         super().set_byte6_bit2(byte6_bit2)

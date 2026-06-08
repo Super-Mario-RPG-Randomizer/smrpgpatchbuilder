@@ -7029,7 +7029,13 @@ class A_Set700CToTappedButton(UsableActionScriptCommand, ActionScriptCommandNoAr
 
 
 class A_SetPaletteRow(UsableActionScriptCommand, ActionScriptCommand):
-    """Change the row offset of the default palette.
+    """Set this object's palette-row index (object RAM $1B bits 3-5) to an absolute value.
+
+    Selects WHICH already-resident CGRAM sprite-palette row the object's tiles use; it
+    does not load palette data by ID. The colour actually shown depends on which palette
+    set was loaded into that CGRAM row at room load -- governed by the sprite's NPC-mold
+    palette fields (``NPC.extra_palette_source_offset`` / ``extra_palette_row_count``) and
+    the room partition. Engine handler $C0:CEEC.
 
     ## Lazy Shell command
         `Palette row = ...`
@@ -7041,8 +7047,9 @@ class A_SetPaletteRow(UsableActionScriptCommand, ActionScriptCommand):
         2 bytes
 
     Args:
-        row (int): The row offset relative to the default palette. (4 bit int)
-        upper (int): (unknown 4 bit int)
+        row (int): The palette-row index to set (engine masks to 3 bits, 0-7).
+        upper (int): High nibble of the argument byte; normally 0. The engine folds the
+            argument as ``(arg << 3) | arg``, so non-zero values produce undefined rows.
         identifier (str | None): Give this command a label if you want another command to jump to it.
     """
 
@@ -7079,7 +7086,15 @@ class A_SetPaletteRow(UsableActionScriptCommand, ActionScriptCommand):
 
 
 class A_IncPaletteRowBy(UsableActionScriptCommand, ActionScriptCommand):
-    """Increase the row offset relative to the current palette by a given amount.
+    """Add ``rows`` to this object's palette-row index (object RAM $1B bits 3-5), wrapping mod 8.
+
+    Shifts WHICH already-resident CGRAM sprite-palette row the object's tiles use
+    (engine: ``row = (row + rows) AND 7`` at $C0:CF1B); it does NOT load a palette by ID.
+    The +N row only shows the sprite's intended alternate colour if extra palette rows were
+    loaded for it at room load -- i.e. the sprite's NPC mold sets the extra-row count
+    (``NPC.extra_palette_row_count``) and source offset (``NPC.extra_palette_source_offset``).
+    With no extra rows
+    the increment spills into the next sprite's palette row.
 
     ## Lazy Shell command
         `Palette row += ...`
@@ -7091,8 +7106,9 @@ class A_IncPaletteRowBy(UsableActionScriptCommand, ActionScriptCommand):
         2 bytes
 
     Args:
-        rows (int): The row offset to increase by, relative to the current palette. (4 bit int)
-        upper (int): Optional upper 4 bits when increasing palette row by >1 (4 bit int)
+        rows (int): Amount to add to the palette-row index (engine masks the result to 0-7).
+        upper (int): High nibble of the argument byte; normally 0. Does not affect the
+            result after the engine's ``AND #$07``.
         identifier (str | None): Give this command a label if you want another command to jump to it.
     """
 
@@ -7131,10 +7147,15 @@ class A_IncPaletteRowBy(UsableActionScriptCommand, ActionScriptCommand):
 
 
 class A_IncPaletteRow(UsableActionScriptCommand, ActionScriptCommandNoArgs):
-    """Increase the row offset relative to the current palette by a given amount.
+    """Add the value of overworld variable $700C to this object's palette-row index.
+
+    WARNING: this is NOT "palette row += 1". The engine handler at $C0:CF21 executes
+    ``LDA $700C`` and computes ``row = (row + [$700C]) AND 7`` -- it adds whatever is
+    currently in variable $700C (PRIMARY_TEMP_700C), not a constant 1. LazyShell's
+    "Palette row += 1" label is misleading. For a fixed +1, use ``A_IncPaletteRowBy(1)``.
 
     ## Lazy Shell command
-        `Palette row += 1`
+        `Palette row += 1`  (misleading -- actually adds variable $700C; see above)
 
     ## Opcode
         `0x0F`
