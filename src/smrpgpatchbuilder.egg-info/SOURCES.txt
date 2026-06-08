@@ -73,6 +73,11 @@ src/smrpgpatchbuilder/datatypes/items/encoding.py
 src/smrpgpatchbuilder/datatypes/items/enums.py
 src/smrpgpatchbuilder/datatypes/levels/classes.py
 src/smrpgpatchbuilder/datatypes/levels/room_collection.py
+src/smrpgpatchbuilder/datatypes/minecart/__init__.py
+src/smrpgpatchbuilder/datatypes/minecart/_vanilla_block.py
+src/smrpgpatchbuilder/datatypes/minecart/classes.py
+src/smrpgpatchbuilder/datatypes/minecart/constants.py
+src/smrpgpatchbuilder/datatypes/minecart/lz3.py
 src/smrpgpatchbuilder/datatypes/monster_scripts/__init__.py
 src/smrpgpatchbuilder/datatypes/monster_scripts/types.py
 src/smrpgpatchbuilder/datatypes/monster_scripts/arguments/__init__.py
@@ -240,6 +245,7 @@ src/tests/dialogs/__init__.py
 src/tests/dialogs/test_formatter.py
 src/tests/levels/__init__.py
 src/tests/levels/test_room_collection.py
+src/tests/minecart/test_minecart.py
 src/tests/monsters/test_ai.py
 src/tests/overworld/test_actionscripts.py
 src/tests/overworld/test_eventscripts.py
