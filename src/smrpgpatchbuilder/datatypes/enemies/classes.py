@@ -24,6 +24,127 @@ ENEMY_POINTER_TABLE_ADDRESS = 0x390026
 REWARD_POINTER_TABLE_ADDRESS = 0x39142A
 REWARD_DATA_BANK = 0x390000  # bank for reward data pointers
 
+# Character encoding for battle text (psychopath messages) -- NO word compression,
+# unlike overworld dialogs. Maps to the byte values SMRPG's battle text renderer
+# expects, which is the DIALOGUE font (0x37C000), glyph index = code - 0x20.
+#
+# This table is VANILLA ONLY. It deliberately does not name the font's blank slots
+# (codes 0x7B-0x8D), which the base game never draws. A romhack that paints its own
+# glyphs into those slots owns them: emit the code as a raw ``chr()`` and
+# ``encode_battle_text`` passes it straight through (see its ``ord()`` fallback,
+# valid for 32-156). Do not add hack-specific glyph names here.
+BATTLE_CHAR_MAP: dict[str, int] = {
+    # Control characters
+    "\n": 0x01,
+    # Standard ASCII characters that map directly
+    " ": 32,
+    "!": 33,
+    "(": 40,
+    ")": 41,
+    ",": 44,
+    "-": 45,
+    ".": 46,
+    "/": 47,
+    "0": 48,
+    "1": 49,
+    "2": 50,
+    "3": 51,
+    "4": 52,
+    "5": 53,
+    "6": 54,
+    "7": 55,
+    "8": 56,
+    "9": 57,
+    "?": 63,
+    "A": 65,
+    "B": 66,
+    "C": 67,
+    "D": 68,
+    "E": 69,
+    "F": 70,
+    "G": 71,
+    "H": 72,
+    "I": 73,
+    "J": 74,
+    "K": 75,
+    "L": 76,
+    "M": 77,
+    "N": 78,
+    "O": 79,
+    "P": 80,
+    "Q": 81,
+    "R": 82,
+    "S": 83,
+    "T": 84,
+    "U": 85,
+    "V": 86,
+    "W": 87,
+    "X": 88,
+    "Y": 89,
+    "Z": 90,
+    "a": 97,
+    "b": 98,
+    "c": 99,
+    "d": 100,
+    "e": 101,
+    "f": 102,
+    "g": 103,
+    "h": 104,
+    "i": 105,
+    "j": 106,
+    "k": 107,
+    "l": 108,
+    "m": 109,
+    "n": 110,
+    "o": 111,
+    "p": 112,
+    "q": 113,
+    "r": 114,
+    "s": 115,
+    "t": 116,
+    "u": 117,
+    "v": 118,
+    "w": 119,
+    "x": 120,
+    "y": 121,
+    "z": 122,
+    # Quote characters (remapped from ASCII)
+    '"': 34,  # Opening double quote (ASCII " is 34)
+    """: 34,  # Curly opening double quote
+    """: 35,  # Curly closing double quote
+    "'": 39,  # ASCII apostrophe -> closing single quote
+    "\u2018": 38,  # Curly opening single quote
+    "\u2019": 39,  # Curly closing single quote
+    # Special symbols
+    "♥": 36,
+    "♪": 37,
+    "•": 42,
+    "··": 43,  # Note: •• handled specially below
+    "~": 58,
+    "「": 59,
+    "」": 60,
+    "『": 61,
+    "』": 62,
+    "©": 64,
+    # Punctuation remapped to higher values
+    ":": 142,
+    ";": 143,
+    "<": 144,
+    ">": 145,
+    "…": 146,
+    "···": 146,  # Ellipsis
+    "#": 147,
+    "+": 148,
+    "×": 149,
+    "%": 150,
+    "↑": 151,
+    "→": 152,
+    "←": 153,
+    "*": 154,
+    "&": 156,
+    "[await]": 0x02,
+}
+
 # psychopath message addresses
 PSYCHOPATH_POINTER_ADDRESS = 0x399FD1
 PSYCHOPATH_DATA_START = 0x39A1D1
@@ -693,136 +814,16 @@ class EnemyCollection:
             )
 
         # now handle psychopath messages
-        # Battle dialog character encoding (NO word compression like overworld dialogs)
-        # These byte values are specific to SMRPG's battle text rendering
-        BATTLE_CHAR_MAP: dict[str, int] = {
-            # Control characters
-            "\n": 0x01,
-            # Standard ASCII characters that map directly
-            " ": 32,
-            "!": 33,
-            "(": 40,
-            ")": 41,
-            ",": 44,
-            "-": 45,
-            ".": 46,
-            "/": 47,
-            "0": 48,
-            "1": 49,
-            "2": 50,
-            "3": 51,
-            "4": 52,
-            "5": 53,
-            "6": 54,
-            "7": 55,
-            "8": 56,
-            "9": 57,
-            "?": 63,
-            "A": 65,
-            "B": 66,
-            "C": 67,
-            "D": 68,
-            "E": 69,
-            "F": 70,
-            "G": 71,
-            "H": 72,
-            "I": 73,
-            "J": 74,
-            "K": 75,
-            "L": 76,
-            "M": 77,
-            "N": 78,
-            "O": 79,
-            "P": 80,
-            "Q": 81,
-            "R": 82,
-            "S": 83,
-            "T": 84,
-            "U": 85,
-            "V": 86,
-            "W": 87,
-            "X": 88,
-            "Y": 89,
-            "Z": 90,
-            "a": 97,
-            "b": 98,
-            "c": 99,
-            "d": 100,
-            "e": 101,
-            "f": 102,
-            "g": 103,
-            "h": 104,
-            "i": 105,
-            "j": 106,
-            "k": 107,
-            "l": 108,
-            "m": 109,
-            "n": 110,
-            "o": 111,
-            "p": 112,
-            "q": 113,
-            "r": 114,
-            "s": 115,
-            "t": 116,
-            "u": 117,
-            "v": 118,
-            "w": 119,
-            "x": 120,
-            "y": 121,
-            "z": 122,
-            # Quote characters (remapped from ASCII)
-            '"': 34,  # Opening double quote (ASCII " is 34)
-            """: 34,  # Curly opening double quote
-            """: 35,  # Curly closing double quote
-            "'": 39,  # ASCII apostrophe -> closing single quote
-            "\u2018": 38,  # Curly opening single quote
-            "\u2019": 39,  # Curly closing single quote
-            # Special symbols
-            "♥": 36,
-            "♪": 37,
-            "•": 42,
-            "··": 43,  # Note: •• handled specially below
-            "~": 58,
-            "「": 59,
-            "」": 60,
-            "『": 61,
-            "』": 62,
-            "©": 64,
-            # Elemental/status symbols for psychopath messages
-            "{": 123,  # Weakness symbol
-            "|": 124,  # Resistance symbol
-            "}": 125,  # Ice symbol (repurposed from ASCII })
-            "~ice~": 125,
-            "~fire~": 126,
-            "~thunder~": 127,
-            "~sleep~": 128,
-            "~fear~": 129,
-            "~mute~": 130,
-            "~poison~": 131,
-            "~ohko~": 132,
-            "~jump~": 133,
-            "~empty~": 141,  # Invisible placeholder (same width as element symbols)
-            # Punctuation remapped to higher values
-            ":": 142,
-            ";": 143,
-            "<": 144,
-            ">": 145,
-            "…": 146,
-            "···": 146,  # Ellipsis
-            "#": 147,
-            "+": 148,
-            "×": 149,
-            "%": 150,
-            "↑": 151,
-            "→": 152,
-            "←": 153,
-            "*": 154,
-            "&": 156,
-            "[await]": 0x02,
-        }
 
         def encode_battle_text(text: str) -> bytearray:
-            """Encode text for battle dialogs/psychopath messages (no word compression)."""
+            """Encode text for battle dialogs/psychopath messages (no word compression).
+
+            Anything not named in ``BATTLE_CHAR_MAP`` falls through to its ordinal
+            (32-156), which is the extension point for romhacks: paint a glyph into
+            one of the dialogue font's blank slots and emit its code as a raw
+            ``chr()``. Callers own whatever they put there, including trimming any
+            padding/placeholder codes off the end -- this function does not.
+            """
             result = bytearray()
             i = 0
             while i < len(text):
@@ -841,9 +842,6 @@ class EnemyCollection:
                     if 32 <= char_ord <= 156:
                         result.append(char_ord)
                     i += 1
-            # Trim trailing empty placeholders (141 = 0x8D)
-            while result and result[-1] == 141:
-                result.pop()
             # End with [await] (0x02) then null terminator (0x00)
             result.append(0x02)  # [await] - pauses for user input
             result.append(0x00)  # null terminator
