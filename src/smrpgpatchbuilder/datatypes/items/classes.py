@@ -488,7 +488,7 @@ class Item:
             + (self.target_all << 4)
             + (self.koed_target_only << 5)
             + (self.one_side_only << 6)
-            + (not (self.can_target_self) << 7)
+            + ((not self.can_target_self) << 7)
         )
         data += ByteField(target).as_bytes()
 
