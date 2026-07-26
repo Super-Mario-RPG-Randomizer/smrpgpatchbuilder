@@ -1010,7 +1010,17 @@ class SpriteCollection:
                                                             confirm_tile = False
                                                             continue
                                                         conf_i += 1
-                                                    if confirm_tile:
+                                                    # offset 0 means this tile hasn't
+                                                    # been emitted yet (it sits later in
+                                                    # the current mold). Real tile
+                                                    # offsets are always >= 0x0C, so 0
+                                                    # is unambiguously "unassigned".
+                                                    # Pointing a clone at 0 aims it at
+                                                    # the animation header and renders a
+                                                    # phantom blank tile.
+                                                    if confirm_tile and (
+                                                        compare_tile.offset != 0
+                                                    ):
                                                         found_clone = True
                                                         found_offset = (
                                                             compare_tile.offset
