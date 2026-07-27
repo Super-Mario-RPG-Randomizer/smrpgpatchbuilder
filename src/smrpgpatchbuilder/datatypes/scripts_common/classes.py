@@ -325,7 +325,7 @@ class Script(Generic[ScriptCommandT]):
         return self._contents
 
     def append(self, command: ScriptCommandT) -> None:
-        """Set the list of script commands."""
+        """Append a command to the end of the script."""
         self._contents.append(command)
 
     def extend(self, commands: list[ScriptCommandT]) -> None:

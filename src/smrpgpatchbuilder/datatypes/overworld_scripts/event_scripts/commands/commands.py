@@ -192,7 +192,7 @@ class EndLoop(UsableEventScriptCommand, EventScriptCommandNoArgs):
         `0xD7`
 
     ## Size
-        2 bytes
+        1 byte
 
     Args:
         identifier (str | None): Give this command a label if you want another command to jump to it.
@@ -453,7 +453,7 @@ class RememberLastObject(UsableEventScriptCommand, EventScriptCommandNoArgs):
         `0xFD 0x32`
 
     ## Size
-        1 byte
+        2 bytes
 
     Args:
         identifier (str | None): Give this command a label if you want another command to jump to it.
@@ -5204,10 +5204,10 @@ class FreezeCamera(UsableEventScriptCommand, EventScriptCommandNoArgs):
         `Freeze screen`
 
     ## Opcode
-        `0x31`
+        `0xFD 0x31`
 
     ## Size
-        1 byte
+        2 bytes
 
     Args:
         identifier (str | None): Give this command a label if you want another command to jump to it.
@@ -5223,10 +5223,10 @@ class UnfreezeCamera(UsableEventScriptCommand, EventScriptCommandNoArgs):
         `Unfreeze screen`
 
     ## Opcode
-        `0x30`
+        `0xFD 0x30`
 
     ## Size
-        1 byte
+        2 bytes
 
     Args:
         identifier (str | None): Give this command a label if you want another command to jump to it.
