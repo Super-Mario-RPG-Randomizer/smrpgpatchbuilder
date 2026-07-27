@@ -2,10 +2,10 @@
 set -euo pipefail
 
 # Usage:
-#   ./release.sh patch
-#   ./release.sh minor
-#   ./release.sh major
-#   ./release.sh 1.2.3
+#   ./publish.sh patch
+#   ./publish.sh minor
+#   ./publish.sh major
+#   ./publish.sh 1.2.3
 
 BUMP="${1:-patch}"
 PYPROJECT="pyproject.toml"
