@@ -8,6 +8,22 @@ from smrpgpatchbuilder.datatypes.items.enums import ItemPrefix
 from smrpgpatchbuilder.datatypes.spells.enums import Status, TempStatBuff
 import shutil
 import os
+import re
+
+
+def _attack_class_base(name):
+    """Reduce an attack name to a valid Python identifier fragment.
+
+    Keeps only word characters (letters, digits, underscore) so names
+    containing slashes, spaces, or non-printable font bytes (e.g. 0x94)
+    don't produce invalid Python class names. A leading digit is prefixed
+    with an underscore.
+    """
+    base = re.sub(r"\W", "", name)
+    if base and base[0].isdigit():
+        base = "_" + base
+    return base
+
 
 class Command(BaseCommand):
 
@@ -116,9 +132,8 @@ class Command(BaseCommand):
         name_counts = {}
         name_occurrence = {}  # Track which occurrence number this is for duplicates
         for attack_data in attacks:
-            if attack_data['name']:
-                # Strip special characters
-                base_name = attack_data['name'].replace(" ", "").replace("'", "").replace("!", "").replace("-", "").replace(".", "").replace("&", "")
+            base_name = _attack_class_base(attack_data['name']) if attack_data['name'] else ""
+            if base_name:
                 name_counts[base_name] = name_counts.get(base_name, 0) + 1
 
         # Second pass: generate attack classes
@@ -126,10 +141,8 @@ class Command(BaseCommand):
 
         for attack_data in attacks:
             # Determine class name
-            if attack_data['name']:
-                # Use the attack name, strip special characters
-                base_name = attack_data['name'].replace(" ", "").replace("'", "").replace("!", "").replace("-", "").replace(".", "").replace("&", "")
-
+            base_name = _attack_class_base(attack_data['name']) if attack_data['name'] else ""
+            if base_name:
                 # Track which occurrence this is (1st, 2nd, 3rd, etc.)
                 if base_name not in name_occurrence:
                     name_occurrence[base_name] = 1
@@ -142,7 +155,7 @@ class Command(BaseCommand):
                 else:
                     class_name = f"{base_name}Attack"
             else:
-                # Blank name - use Attack{ID}
+                # Blank or unrepresentable name - use Attack{ID}
                 class_name = f"Attack{attack_data['index']}"
 
             # Store the class name

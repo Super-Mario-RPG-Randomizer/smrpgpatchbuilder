@@ -71,11 +71,8 @@ class RoomCollection:
             npc.priority_1,
             npc.priority_2,
             npc.cannot_clone,
-            npc.byte2_bit0,
-            npc.byte2_bit1,
-            npc.byte2_bit2,
-            npc.byte2_bit3,
-            npc.byte2_bit4,
+            npc.extra_palette_source_offset,
+            npc.extra_palette_row_count,
             npc.byte5_bit6,
             npc.byte5_bit7,
             npc.byte6_bit2,
@@ -105,11 +102,8 @@ class RoomCollection:
                         if room_obj.cannot_clone is not None
                         else None
                     ),
-                    room_obj.byte2_bit0 if room_obj.byte2_bit0 is not None else None,
-                    room_obj.byte2_bit1 if room_obj.byte2_bit1 is not None else None,
-                    room_obj.byte2_bit2 if room_obj.byte2_bit2 is not None else None,
-                    room_obj.byte2_bit3 if room_obj.byte2_bit3 is not None else None,
-                    room_obj.byte2_bit4 if room_obj.byte2_bit4 is not None else None,
+                    room_obj.extra_palette_source_offset if room_obj.extra_palette_source_offset is not None else None,
+                    room_obj.extra_palette_row_count if room_obj.extra_palette_row_count is not None else None,
                     room_obj.byte5_bit6 if room_obj.byte5_bit6 is not None else None,
                     room_obj.byte5_bit7 if room_obj.byte5_bit7 is not None else None,
                     room_obj.byte6_bit2 if room_obj.byte6_bit2 is not None else None,
@@ -224,6 +218,12 @@ class RoomCollection:
             else:
                 unique_npcs[0] = self._force_first_npc
             reserved_indices.add(0)
+            # Index 0 is now occupied. If no force_id NPCs bumped min_table_size,
+            # it stays 0 and the allocator below (which seeds next_index_after_forced
+            # and available_indices from min_table_size) would hand out index 0 again,
+            # overwriting force_first_npc. Reserve at least one slot for it.
+            if min_table_size == 0:
+                min_table_size = 1
 
         # Track which signatures have been placed via force_id
         sig_to_forced_index: dict[tuple, int] = {}
@@ -449,30 +449,15 @@ class RoomCollection:
                 if room_obj.cannot_clone is not None
                 else base_npc.cannot_clone
             ),
-            byte2_bit0=(
-                room_obj.byte2_bit0
-                if room_obj.byte2_bit0 is not None
-                else base_npc.byte2_bit0
+            extra_palette_source_offset=(
+                room_obj.extra_palette_source_offset
+                if room_obj.extra_palette_source_offset is not None
+                else base_npc.extra_palette_source_offset
             ),
-            byte2_bit1=(
-                room_obj.byte2_bit1
-                if room_obj.byte2_bit1 is not None
-                else base_npc.byte2_bit1
-            ),
-            byte2_bit2=(
-                room_obj.byte2_bit2
-                if room_obj.byte2_bit2 is not None
-                else base_npc.byte2_bit2
-            ),
-            byte2_bit3=(
-                room_obj.byte2_bit3
-                if room_obj.byte2_bit3 is not None
-                else base_npc.byte2_bit3
-            ),
-            byte2_bit4=(
-                room_obj.byte2_bit4
-                if room_obj.byte2_bit4 is not None
-                else base_npc.byte2_bit4
+            extra_palette_row_count=(
+                room_obj.extra_palette_row_count
+                if room_obj.extra_palette_row_count is not None
+                else base_npc.extra_palette_row_count
             ),
             byte5_bit6=(
                 room_obj.byte5_bit6
@@ -616,12 +601,16 @@ class RoomCollection:
         exit_patches = self._render_exits()
         patches.update(exit_patches)
 
-        # Render area map effectsNPC byte (byte 16 of each 18-byte area map record)
+        # Render area map effectsNPC byte (byte 16 of each 18-byte area map record).
+        # Always write — explicitly setting EffectsNpc.NOTHING (0x00) must overwrite
+        # any non-zero vanilla value, otherwise NOTHING silently leaves the original
+        # ROM byte intact.
         area_map_base = 0x1D0040
         for room_idx, room in enumerate(self._rooms):
-            if room is not None and room.effects_npc != 0:
-                offset = area_map_base + (room_idx * 18) + 16
-                patches[offset] = bytearray([room.effects_npc])
+            if room is None:
+                continue
+            offset = area_map_base + (room_idx * 18) + 16
+            patches[offset] = bytearray([room.effects_npc])
 
         return patches
 
@@ -663,11 +652,8 @@ class RoomCollection:
 
         # Byte 2: priority and misc bits
         data[2] = (
-            (1 if npc.byte2_bit0 else 0)
-            | ((1 if npc.byte2_bit1 else 0) << 1)
-            | ((1 if npc.byte2_bit2 else 0) << 2)
-            | ((1 if npc.byte2_bit3 else 0) << 3)
-            | ((1 if npc.byte2_bit4 else 0) << 4)
+            ((npc.extra_palette_source_offset or 0) & 0x07)
+            | (((npc.extra_palette_row_count or 0) & 0x03) << 3)
             | ((1 if npc.priority_0 else 0) << 5)
             | ((1 if npc.priority_1 else 0) << 6)
             | ((1 if npc.priority_2 else 0) << 7)
@@ -864,6 +850,17 @@ class RoomCollection:
                 npc_offset = npc_index - base_assigned_npc
                 action_offset = obj.action_script - base_action_script
                 event_offset = obj.event_script - base_event_script
+
+                if event_offset < 0 or event_offset > 7:
+                    raise ValueError(
+                        f"Room {room_idx} object {obj_idx} (RegularClone):\n"
+                        f"  event_script offset {event_offset} out of range [0, 7]\n"
+                        f"  Clone event_script: {obj.event_script}\n"
+                        f"  Parent event_script: {parent.event_script}\n"
+                        f"  Base event_script: {base_event_script}\n"
+                        f"  A clone's event_script must be within 7 of the base "
+                        f"(min of parent + sibling clones); the encoding only has 3 bits."
+                    )
 
                 data[0] = (
                     ((event_offset & 0x07) << 5)

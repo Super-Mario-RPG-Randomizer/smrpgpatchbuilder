@@ -1,0 +1,88 @@
+# pyright: reportWildcardImportFromLibrary=false
+from smrpgpatchbuilder.datatypes.battle_animation_scripts import *
+from ....variables.sprite_names import *
+from ....variables.music_names import *
+from ....variables.battle_sfx_names import *
+from ....variables.battle_effect_names import *
+from ....variables.battle_event_names import *
+from ....variables.screen_effect_names import *
+from ....spells.spells import *
+from ....items.items import *
+from ....enemies.enemies import *
+from ....enemy_attacks.attacks import *
+from smrpgpatchbuilder.datatypes.battle_animation_scripts.arguments.battle_targets import *
+
+script = AnimationScriptBlock(expected_size=406, expected_beginning=0x3A755E, script=[
+	ClearAMEM8Bit(0x68, identifier="command_0x3A755E"),
+	SetAMEM8BitToAbsolute7E(0x68, 0x7EE01F),
+	SetAMEMBits(0x68, [0]),
+	Jmp(["extracted_subr_c8dd4fa65fb243f8a7bea23323f0e90d"]),
+	Jmp(["command_0x3A755E"]),
+	SetAMEMBits(0x68, [1]),
+	Jmp(["extracted_subr_c8dd4fa65fb243f8a7bea23323f0e90d"]),
+	SetAMEMBits(0x68, [2]),
+	Jmp(["extracted_subr_c8dd4fa65fb243f8a7bea23323f0e90d"]),
+	SetAMEMBits(0x68, [3]),
+	Jmp(["extracted_subr_c8dd4fa65fb243f8a7bea23323f0e90d"]),
+	SetAMEMBits(0x68, [4]),
+	Jmp(["extracted_subr_c8dd4fa65fb243f8a7bea23323f0e90d"]),
+	SetAMEMBits(0x68, [5]),
+	Jmp(["extracted_subr_c8dd4fa65fb243f8a7bea23323f0e90d"]),
+	SetAMEMBits(0x68, [6]),
+	Jmp(["extracted_subr_c8dd4fa65fb243f8a7bea23323f0e90d"]),
+	SetAMEMBits(0x68, [7]),
+	Jmp(["extracted_subr_c8dd4fa65fb243f8a7bea23323f0e90d"]),
+	ClearAMEM8Bit(0x68, identifier="command_0x3A75CE"),
+	SetAMEM8BitToAbsolute7E(0x68, 0x7EE01E),
+	SetAMEMBits(0x68, [0]),
+	SetAbsolute7EToAMEM8Bit(0x7EE01E, 0x68, identifier="extracted_subr_8612b509f84b47a89f60efd7af99fd41"),
+	ReturnSubroutine(),
+	Jmp(["command_0x3A75CE"]),
+	SetAMEMBits(0x68, [1]),
+	Jmp(["extracted_subr_8612b509f84b47a89f60efd7af99fd41"]),
+	SetAMEMBits(0x68, [2]),
+	Jmp(["extracted_subr_8612b509f84b47a89f60efd7af99fd41"]),
+	SetAMEMBits(0x68, [3]),
+	Jmp(["extracted_subr_8612b509f84b47a89f60efd7af99fd41"]),
+	SetAMEMBits(0x68, [4]),
+	Jmp(["extracted_subr_8612b509f84b47a89f60efd7af99fd41"]),
+	SetAMEMBits(0x68, [5]),
+	Jmp(["extracted_subr_8612b509f84b47a89f60efd7af99fd41"]),
+	SetAMEMBits(0x68, [6]),
+	Jmp(["extracted_subr_8612b509f84b47a89f60efd7af99fd41"]),
+	SetAMEMBits(0x68, [7]),
+	Jmp(["extracted_subr_8612b509f84b47a89f60efd7af99fd41"]),
+	SetAMEM8BitToAbsolute7E(0x68, 0x7EE01D),
+	SetAMEMBits(0x68, [0]),
+	SetAbsolute7EToAMEM8Bit(0x7EE01D, 0x68, identifier="extracted_subr_90e6469162604e8eb61decd561f6b559"),
+	ReturnSubroutine(),
+	ClearAMEM8Bit(0x68, identifier="command_0x3A764C"),
+	SetAMEM8BitToAbsolute7E(0x68, 0x7EE01D),
+	SetAMEMBits(0x68, [1]),
+	Jmp(["extracted_subr_90e6469162604e8eb61decd561f6b559"]),
+	SetAMEMBits(0x68, [2]),
+	Jmp(["extracted_subr_90e6469162604e8eb61decd561f6b559"]),
+	SetAMEMBits(0x68, [3]),
+	Jmp(["extracted_subr_90e6469162604e8eb61decd561f6b559"]),
+	SetAMEMBits(0x68, [4]),
+	Jmp(["extracted_subr_90e6469162604e8eb61decd561f6b559"]),
+	SetAMEMBits(0x68, [5]),
+	Jmp(["extracted_subr_90e6469162604e8eb61decd561f6b559"]),
+	SetAMEMBits(0x68, [6]),
+	Jmp(["extracted_subr_90e6469162604e8eb61decd561f6b559"]),
+	SetAMEMBits(0x68, [7]),
+	Jmp(["extracted_subr_90e6469162604e8eb61decd561f6b559"]),
+	SetAMEM8BitToAbsolute7E(0x68, 0x7EE01C),
+	SetAMEMBits(0x68, [0]),
+	SetAbsolute7EToAMEM8Bit(0x7EE01C, 0x68, identifier="extracted_subr_b881aa8aa6a9429cb892da33b65d2533"),
+	ReturnSubroutine(identifier="extracted_subr_pos1_2c3f553eb8894768ad5d80227b17ac27"),
+	Jmp(["command_0x3A764C"]),
+	SetAMEMBits(0x68, [1]),
+	Jmp(["extracted_subr_b881aa8aa6a9429cb892da33b65d2533"]),
+	SetAMEMBits(0x68, [2]),
+	Jmp(["extracted_subr_b881aa8aa6a9429cb892da33b65d2533"]),
+	SetAMEMBits(0x68, [3]),
+	Jmp(["extracted_subr_b881aa8aa6a9429cb892da33b65d2533"]),
+	SetAMEMBits(0x68, [4]),
+	Jmp(["extracted_subr_b881aa8aa6a9429cb892da33b65d2533"]),
+])

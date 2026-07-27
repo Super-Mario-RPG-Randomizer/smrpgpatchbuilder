@@ -192,7 +192,7 @@ class EndLoop(UsableEventScriptCommand, EventScriptCommandNoArgs):
         `0xD7`
 
     ## Size
-        2 bytes
+        1 byte
 
     Args:
         identifier (str | None): Give this command a label if you want another command to jump to it.
@@ -453,7 +453,7 @@ class RememberLastObject(UsableEventScriptCommand, EventScriptCommandNoArgs):
         `0xFD 0x32`
 
     ## Size
-        1 byte
+        2 bytes
 
     Args:
         identifier (str | None): Give this command a label if you want another command to jump to it.
@@ -1364,7 +1364,7 @@ _valid_unknowncmd_opcodes_fd: list[int] = [
     0,
     5,
     2,
-    5,
+    0,  # 8E (handled by DarkenLayersExceptPaletteRows)
     3,
     0,  # 90
     0,
@@ -2567,6 +2567,157 @@ class CopyVarToVar(UsableEventScriptCommand, EventScriptCommand):
             f"""illegal args for {self.identifier.label}: 
             0x{self.from_var:04x} 0x{self.to_var:04x}"""
         )
+
+
+class DarkenLayersExceptPaletteRows(UsableEventScriptCommand, EventScriptCommand):
+    """Darken the level background and all NPCs except the OBJ palette rows listed
+    in `preserve_rows`, ramping over `duration_frames` frames. The handler at
+    $C0:4FD9 unpacks three bytes:
+
+        byte 2 (offset 0): low 6 bits → fade depth ($318B);
+                           high 2 bits → bits 0-1 of duration counter
+        byte 3 (offset 1): bits 2-9 of the duration counter
+        byte 4 (offset 2): 8-bit OBJ palette-row exclusion mask ($003185)
+
+    The two duration-related bytes get combined as a 16-bit load and shifted right
+    by 6, giving a 10-bit duration value written to $318C and $318E. The palette
+    processor at $C0:3A44 decrements $318C each frame and ends the fade when it
+    reaches zero.
+
+    The palette processor at $C0:3AEE walks 8 rows (the OBJ palette set, rows
+    8-15) and skips any row whose bit is set in the exclusion mask, leaving only
+    the unmasked rows darkened. Mask bits correspond to:
+
+        bit 0 → MARIO_PALETTE        (PaletteRow 8 — the player)
+        bit 1 → NPC_PALETTE_ROW_1    (PaletteRow 9)
+        bit 2 → NPC_PALETTE_ROW_2    (PaletteRow 10)
+        bit 3 → NPC_PALETTE_ROW_3    (PaletteRow 11)
+        bit 4 → NPC_PALETTE_ROW_4    (PaletteRow 12)
+        bit 5 → NPC_PALETTE_ROW_5    (PaletteRow 13)
+        bit 6 → NPC_PALETTE_ROW_6    (PaletteRow 14)
+        bit 7 → NPC_PALETTE_ROW_7    (PaletteRow 15)
+
+    `fade_depth=50` (0x32) is treated as a sentinel "max" by the processor at
+    $C0:3A4C — when the duration counter expires at this depth, the fade state is
+    cleared completely instead of transitioning into "fade-out completed" mode.
+
+    **Note on ally-buffer growth:** when a room's `ally_sprite_buffer_size`
+    increases (e.g. for non-Mario protagonists with tilemap molds), every NPC
+    palette row shifts by the same delta, so the NPC entries in `preserve_rows`
+    must shift forward by the same delta to keep targeting the same NPCs.
+    `MARIO_PALETTE` does not shift.
+
+    ## Lazy Shell command
+        (not available in Lazy Shell)
+
+    ## Opcode
+        `0xFD 0x8E`
+
+    ## Size
+        5 bytes
+
+    Args:
+        fade_depth (int): Color-subtraction intensity, 0-63. Higher = darker.
+            Special value 50 (0x32) is the "max depth" sentinel that triggers
+            full state-clear when the fade ends.
+        duration_frames (int): How many frames the fade lasts, 0-1023.
+        preserve_rows (list[PaletteRow]): Palette rows to preserve from the
+            darken effect. Each entry must be `MARIO_PALETTE` or
+            `NPC_PALETTE_ROW_1` through `NPC_PALETTE_ROW_7` (PaletteRow values
+            8-15). Empty list = darken all rows.
+        identifier (str | None): Give this command a label if you want another
+            command to jump to it.
+    """
+
+    _opcode = bytearray([0xFD, 0x8E])
+    _size: int = 5
+    _OBJ_PALETTE_BASE = 8  # PaletteRow(8) = MARIO_PALETTE = bit 0 of the mask.
+    _MAX_FADE_DEPTH = 0x3F  # 6-bit field
+    _MAX_DURATION = 0x3FF   # 10-bit field
+    _fade_depth: UInt8
+    _duration_frames: UInt16
+    _preserve_rows: list[PaletteRow]
+
+    @property
+    def fade_depth(self) -> UInt8:
+        """Color-subtraction intensity, 0-63. 50 (0x32) is the max-depth sentinel."""
+        return self._fade_depth
+
+    def set_fade_depth(self, fade_depth: int) -> None:
+        """Set the fade depth (0-63)."""
+        if not 0 <= fade_depth <= self._MAX_FADE_DEPTH:
+            raise InvalidCommandArgumentException(
+                f"DarkenLayersExceptPaletteRows fade_depth must be 0-{self._MAX_FADE_DEPTH}; "
+                f"got {fade_depth}"
+            )
+        self._fade_depth = UInt8(fade_depth)
+
+    @property
+    def duration_frames(self) -> UInt16:
+        """Fade duration in frames, 0-1023."""
+        return self._duration_frames
+
+    def set_duration_frames(self, duration_frames: int) -> None:
+        """Set the fade duration in frames (0-1023)."""
+        if not 0 <= duration_frames <= self._MAX_DURATION:
+            raise InvalidCommandArgumentException(
+                f"DarkenLayersExceptPaletteRows duration_frames must be 0-{self._MAX_DURATION}; "
+                f"got {duration_frames}"
+            )
+        self._duration_frames = UInt16(duration_frames)
+
+    @property
+    def preserve_rows(self) -> list[PaletteRow]:
+        """Palette rows that the fade should preserve. Always sorted ascending."""
+        return sorted(self._preserve_rows)
+
+    def set_preserve_rows(self, preserve_rows: list[PaletteRow | int]) -> None:
+        """Set the palette rows to preserve. Each entry must be a PaletteRow in
+        the OBJ range (8-15)."""
+        rows: list[PaletteRow] = []
+        seen: set[int] = set()
+        for r in preserve_rows:
+            row = PaletteRow(r)
+            if not (
+                self._OBJ_PALETTE_BASE <= row <= self._OBJ_PALETTE_BASE + 7
+            ):
+                raise InvalidCommandArgumentException(
+                    f"DarkenLayersExceptPaletteRows preserve_rows entries must be "
+                    f"MARIO_PALETTE or NPC_PALETTE_ROW_1 through NPC_PALETTE_ROW_7 "
+                    f"(PaletteRow {self._OBJ_PALETTE_BASE} through "
+                    f"{self._OBJ_PALETTE_BASE + 7}); got PaletteRow {int(row)}"
+                )
+            if int(row) not in seen:
+                rows.append(row)
+                seen.add(int(row))
+        self._preserve_rows = rows
+
+    @property
+    def preserve_rows_mask(self) -> UInt8:
+        """The 8-bit bitmask written to $003185 (derived from `preserve_rows`)."""
+        mask = 0
+        for row in self._preserve_rows:
+            mask |= 1 << (int(row) - self._OBJ_PALETTE_BASE)
+        return UInt8(mask)
+
+    def __init__(
+        self,
+        fade_depth: int,
+        duration_frames: int,
+        preserve_rows: list[PaletteRow | int],
+        identifier: str | None = None,
+    ) -> None:
+        super().__init__(identifier)
+        self.set_fade_depth(fade_depth)
+        self.set_duration_frames(duration_frames)
+        self.set_preserve_rows(preserve_rows)
+
+    def render(self, *args) -> bytearray:
+        # The handler reads byte 2 (low 6 bits = depth, high 2 bits = duration[0:2])
+        # and byte 3 (duration[2:10]), so re-pack here.
+        byte_2 = ((self._duration_frames & 0x03) << 6) | (self._fade_depth & 0x3F)
+        byte_3 = (self._duration_frames >> 2) & 0xFF
+        return super().render(UInt8(byte_2), UInt8(byte_3), self.preserve_rows_mask)
 
 
 class StoreBytesTo0335And0556(UsableEventScriptCommand, EventScriptCommand):
@@ -5053,10 +5204,10 @@ class FreezeCamera(UsableEventScriptCommand, EventScriptCommandNoArgs):
         `Freeze screen`
 
     ## Opcode
-        `0x31`
+        `0xFD 0x31`
 
     ## Size
-        1 byte
+        2 bytes
 
     Args:
         identifier (str | None): Give this command a label if you want another command to jump to it.
@@ -5072,10 +5223,10 @@ class UnfreezeCamera(UsableEventScriptCommand, EventScriptCommandNoArgs):
         `Unfreeze screen`
 
     ## Opcode
-        `0x30`
+        `0xFD 0x30`
 
     ## Size
-        1 byte
+        2 bytes
 
     Args:
         identifier (str | None): Give this command a label if you want another command to jump to it.

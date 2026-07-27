@@ -99,7 +99,7 @@ PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packetdisassembler --rom "
 ```
 
 These will produce: 
-- `./src/disassembler_output/items.items.py`
+- `./src/disassembler_output/items/items.py`
 - `./src/disassembler_output/enemy_attacks/attacks.py`
 - `./src/disassembler_output/spells/spells.py`
 - `./src/disassembler_output/packets/packets.py`
@@ -570,7 +570,7 @@ PYTHONPATH=src python src/smrpgpatchbuilder/manage.py itemassembler -r path/to/y
 ```
 Writes to:
 ```
-./src/disassembler_output/items.items.py
+./src/disassembler_output/items/items.py
 ```
 
 Examples - NokNokShell, Muku Cookie, and Fire Bomb:

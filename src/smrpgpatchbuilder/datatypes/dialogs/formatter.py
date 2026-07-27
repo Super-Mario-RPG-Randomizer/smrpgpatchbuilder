@@ -110,6 +110,42 @@ def _build_control_token_list() -> list[str]:
 _CONTROL_TOKENS = _build_control_token_list()
 
 
+def _byte_glyph_width(byte: int, widths: tuple[int, ...] = VANILLA_DIALOG_FONT_WIDTHS) -> int:
+    """Rendered width (raw + 1px spacing) of a single compressed dialog byte.
+
+    The game renders the *compressed* byte stream, so a character's on-screen
+    width is that of its glyph byte -- e.g. ':' is stored as 0x8E and drawn with
+    glyph 0x8E's width, not ASCII 0x3A's. Bytes below 0x20 are control codes and
+    have no width (mirrors Lazy Shell's ``l >= 0x20 && l <= 0x9F`` guard).
+    """
+    if 0x20 <= byte <= 0x20 + len(widths) - 1:
+        return widths[byte - 0x20] + 1
+    return 0
+
+
+def _build_glyph_tokens() -> list[tuple[str, int]]:
+    """Compression-table substrings that render as one drawable glyph, paired
+    with that glyph's byte value.
+
+    These are the source-string spellings (curly quotes, ``♥``, ``♪``, bullets,
+    and remapped punctuation like ``:`` ``~`` ``×``) whose glyph byte differs
+    from their unicode codepoint. Sorted longest-first so greedy matching picks
+    e.g. the single ``••`` glyph (0x2B) over two ``•`` (0x2A). Control/variable
+    entries (byte < 0x20, or multi-byte like ``[0x7000]``) are excluded -- those
+    are handled as control/variable tokens elsewhere. Width is computed at
+    tokenize time so a caller-supplied ``widths`` table is honored.
+    """
+    glyphs = []
+    for key, val in COMPRESSION_TABLE:
+        if len(val) == 1 and 0x20 <= val[0] <= 0x9F:
+            glyphs.append((key, val[0]))
+    glyphs.sort(key=lambda kv: -len(kv[0]))
+    return glyphs
+
+
+_GLYPH_TOKENS = _build_glyph_tokens()
+
+
 def _tokenize(text: str, widths: tuple[int, ...] = VANILLA_DIALOG_FONT_WIDTHS) -> list[Token]:
     """Parse a dialog string into a sequence of tokens."""
     tokens = []
@@ -163,6 +199,20 @@ def _tokenize(text: str, widths: tuple[int, ...] = VANILLA_DIALOG_FONT_WIDTHS) -
                 break
 
         if matched:
+            continue
+
+        # 2c. Match a compression-table glyph substring (curly quotes, ♥, ♪,
+        # bullets, remapped punctuation like ':' -> 0x8E). These render as one
+        # glyph whose width comes from the *byte*, not the unicode codepoint,
+        # so measuring ord(char) would give the wrong width (often 0).
+        glyph_matched = False
+        for sub, byte in _GLYPH_TOKENS:
+            if text[cursor:cursor + len(sub)] == sub:
+                tokens.append(Token(text=sub, width_px=_byte_glyph_width(byte, widths)))
+                cursor += len(sub)
+                glyph_matched = True
+                break
+        if glyph_matched:
             continue
 
         # 3. Literal character

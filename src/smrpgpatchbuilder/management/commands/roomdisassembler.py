@@ -89,11 +89,8 @@ class Command(BaseCommand):
             writeline(file, f"    priority_1={npc.priority_1!r},")
             writeline(file, f"    priority_2={npc.priority_2!r},")
             writeline(file, f"    cannot_clone={npc.cannot_clone!r},")
-            writeline(file, f"    byte2_bit0={npc.byte2_bit0!r},")
-            writeline(file, f"    byte2_bit1={npc.byte2_bit1!r},")
-            writeline(file, f"    byte2_bit2={npc.byte2_bit2!r},")
-            writeline(file, f"    byte2_bit3={npc.byte2_bit3!r},")
-            writeline(file, f"    byte2_bit4={npc.byte2_bit4!r},")
+            writeline(file, f"    extra_palette_source_offset={npc.extra_palette_source_offset!r},")
+            writeline(file, f"    extra_palette_row_count={npc.extra_palette_row_count!r},")
             writeline(file, f"    byte5_bit6={npc.byte5_bit6!r},")
             writeline(file, f"    byte5_bit7={npc.byte5_bit7!r},")
             writeline(file, f"    byte6_bit2={npc.byte6_bit2!r},")
@@ -222,11 +219,8 @@ class Command(BaseCommand):
             priority0 = (raw_data[2] & 0x20) == 0x20  # bit 5
             priority1 = (raw_data[2] & 0x40) == 0x40  # bit 6
             priority2 = (raw_data[2] & 0x80) == 0x80  # bit 7
-            byte2_bit0 = (raw_data[2] & 0x01) == 0x01  # bit 0
-            byte2_bit1 = (raw_data[2] & 0x02) == 0x02  # bit 1
-            byte2_bit2 = (raw_data[2] & 0x04) == 0x04  # bit 2
-            byte2_bit3 = (raw_data[2] & 0x08) == 0x08  # bit 3
-            byte2_bit4 = (raw_data[2] & 0x10) == 0x10  # bit 4
+            extra_palette_source_offset = raw_data[2] & 0x07  # bits 0-2 (palette source offset M)
+            extra_palette_row_count = (raw_data[2] >> 3) & 0x03  # bits 3-4 (extra palette row count N)
             y_pixel_shift = raw_data[3] & 0x0F
             shift_16_px_down = (raw_data[3] & 0x10) == 0x10  # bit 4
             shadow_val = (raw_data[3] & 0x60) >> 5
@@ -259,11 +253,8 @@ class Command(BaseCommand):
                 priority1,
                 priority2,
                 cannot_clone,
-                byte2_bit0,
-                byte2_bit1,
-                byte2_bit2,
-                byte2_bit3,
-                byte2_bit4,
+                extra_palette_source_offset,
+                extra_palette_row_count,
                 byte5_bit6,
                 byte5_bit7,
                 byte6_bit2,

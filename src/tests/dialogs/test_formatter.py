@@ -271,3 +271,75 @@ class TestCalculateTextWidth:
     def test_variable_token(self):
         # [0x7000] should be 16px
         assert calculate_text_width("[0x7000]") == 16
+
+
+class TestSpecialCharWidths:
+    """Width must come from the *compressed glyph byte*, not the unicode
+    codepoint. The game renders the compressed byte stream, so e.g. ':' is
+    drawn with glyph 0x8E, and a heart with glyph 0x24 -- see COMPRESSION_TABLE.
+    Before the fix these all measured 0px (out-of-range unicode) or the wrong
+    ascii slot."""
+
+    def test_curly_quotes(self):
+        # left/right double quotes -> bytes 0x22 / 0x23 (raw 6 -> 7)
+        assert calculate_text_width("“") == 7
+        assert calculate_text_width("”") == 7
+
+    def test_curly_apostrophes(self):
+        # left/right single quotes -> bytes 0x26 / 0x27 (raw 4 -> 5)
+        assert calculate_text_width("‘") == 5
+        assert calculate_text_width("’") == 5
+
+    def test_heart_and_note(self):
+        # heart -> 0x24 (raw 8 -> 9), eighth note -> 0x25 (raw 8 -> 9)
+        assert calculate_text_width("♥") == 9
+        assert calculate_text_width("♪") == 9
+
+    def test_bullets_greedy(self):
+        # single bullet -> 0x2A (raw 6 -> 7); double bullet -> 0x2B (raw 8 -> 9)
+        # Greedy longest-match must pick the single 0x2B glyph, not two 0x2A.
+        assert calculate_text_width("•") == 7
+        assert calculate_text_width("••") == 9
+
+    def test_remapped_punctuation(self):
+        # ':' stored as 0x8E (raw 7 -> 8), NOT ascii 0x3A (raw 8 -> 9)
+        assert calculate_text_width(":") == 8
+        assert calculate_text_width(";") == 8   # 0x8F raw 7 -> 8
+        assert calculate_text_width("<") == 9   # 0x90 raw 8 -> 9
+        assert calculate_text_width(">") == 9   # 0x91 raw 8 -> 9
+        assert calculate_text_width("#") == 10  # 0x93 raw 9 -> 10
+        assert calculate_text_width("&") == 9   # 0x9C raw 8 -> 9
+
+    def test_tilde(self):
+        # '~' stored as 0x3A (raw 8 -> 9), NOT ascii 0x7E
+        assert calculate_text_width("~") == 9
+
+    def test_multiplication_sign(self):
+        # multiplication sign -> 0x95 (raw 9 -> 10); unicode is out-of-range (was 0)
+        assert calculate_text_width("×") == 10
+
+    def test_middle_dots_greedy(self):
+        # three middle dots -> single glyph 0x92 (raw 9 -> 10)
+        assert calculate_text_width("···") == 10
+
+    def test_tokenizes_special_into_word(self):
+        # A special glyph is part of its surrounding word (not a break), so the
+        # whole word's width is counted for wrap decisions.
+        tokens = _tokenize("a♥b")
+        assert [t.text for t in tokens] == ["a", "♥", "b"]
+        assert tokens[1].width_px == 9
+
+
+class TestSpecialCharWrapping:
+    """Regression: special chars measured as 0px let lines overflow, so the
+    game wrapped a word on its own right before the formatter's \\n."""
+
+    def test_line_with_specials_does_not_overflow(self):
+        # start_x = 17, wrap boundary = 240 -> a completed line's content width
+        # must stay below 240 - 17 = 223px.
+        raw = ("The “Super” Star ♥ gives you power ♪ "
+               "for a while okay friend")
+        formatted = format_dialog(raw)
+        for line in formatted.split("\n"):
+            assert calculate_text_width(line) < 223, (
+                repr(line), calculate_text_width(line))
