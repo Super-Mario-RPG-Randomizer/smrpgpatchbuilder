@@ -249,3 +249,4 @@ src/tests/minecart/test_minecart.py
 src/tests/monsters/test_ai.py
 src/tests/overworld/test_actionscripts.py
 src/tests/overworld/test_eventscripts.py
+src/tests/scripts_common/test_script_helpers.py

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: smrpgpatchbuilder
-Version: 7.1.7
+Version: 7.1.8
 Summary: Patchable base class support for some SMRPG concepts similar to their definitions in Lazy Shell
 Author-email: pidgezero_one <s.kischak@gmail.com>
 License-Expression: MIT
@@ -115,7 +115,7 @@ PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packetdisassembler --rom "
 ```
 
 These will produce: 
-- `./src/disassembler_output/items.items.py`
+- `./src/disassembler_output/items/items.py`
 - `./src/disassembler_output/enemy_attacks/attacks.py`
 - `./src/disassembler_output/spells/spells.py`
 - `./src/disassembler_output/packets/packets.py`
@@ -586,7 +586,7 @@ PYTHONPATH=src python src/smrpgpatchbuilder/manage.py itemassembler -r path/to/y
 ```
 Writes to:
 ```
-./src/disassembler_output/items.items.py
+./src/disassembler_output/items/items.py
 ```
 
 Examples - NokNokShell, Muku Cookie, and Fire Bomb:
