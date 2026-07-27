@@ -8,3 +8,8 @@ debug.log
 config/** 
 .claude
 .vscode
+
+# Claude Code local storage
+/.claude/history/
+/.claude/*.log
+/.claude/cache/
