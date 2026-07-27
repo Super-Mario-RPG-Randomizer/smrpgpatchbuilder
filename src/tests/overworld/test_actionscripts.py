@@ -1854,14 +1854,14 @@ test_cases = [
     Case(
         "Valid unknown command",
         commands_factory=lambda: [
-            A_UnknownCommand(bytearray([0x24, 0xAB, 0xCD, 0xFE, 0x69])),
+            A_UnknownCommand(bytearray([0x25, 0xAB, 0xCD, 0xFE, 0x69])),
         ],
-        expected_bytes=[0x24, 0xAB, 0xCD, 0xFE, 0x69],
+        expected_bytes=[0x25, 0xAB, 0xCD, 0xFE, 0x69],
     ),
     Case(
         "Unknown command with wrong length should fail",
-        commands_factory=lambda: [A_UnknownCommand(bytearray([0x24, 0xAB, 0xCD]))],
-        exception="opcode 0x24 expects 5 total bytes (inclusive), got 3 bytes instead",
+        commands_factory=lambda: [A_UnknownCommand(bytearray([0x25, 0xAB, 0xCD]))],
+        exception="opcode 0x25 expects 5 total bytes (inclusive), got 3 bytes instead",
         exception_type=InvalidCommandArgumentException,
     ),
     Case(

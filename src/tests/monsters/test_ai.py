@@ -2,7 +2,7 @@ import pytest
 
 from dataclasses import dataclass
 
-from disassembler_output.spells.spells import CharacterSpell, EnemySpell
+from smrpgpatchbuilder.datatypes.spells.classes import CharacterSpell, EnemySpell
 from smrpgpatchbuilder.datatypes.enemy_attacks.classes import EnemyAttack
 from smrpgpatchbuilder.datatypes.items.classes import RegularItem
 from smrpgpatchbuilder.datatypes.monster_scripts import *
