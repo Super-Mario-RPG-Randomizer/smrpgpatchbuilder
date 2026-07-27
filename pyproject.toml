@@ -25,5 +25,9 @@ dependencies=[
 Homepage = "https://github.com/pidgezero-one/smrpgpatchbuilder"
 Issues = "https://github.com/pidgezero-one/smrpgpatchbuilder/issues"
 
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["smrpgpatchbuilder*"]
+
 [tool.pytest.ini_options]
 addopts = "-v -s"
