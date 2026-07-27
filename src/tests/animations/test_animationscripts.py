@@ -339,93 +339,93 @@ test_cases = [
         expected_bytes=[0x2F, 0x00, 0x40, 0x00],
     ),
     Case(
-        label="SetAMEM8BitTo7E1x",
+        label="SetAMEM8BitToAbsolute7E",
         commands_factory=lambda: [
-            SetAMEM8BitTo7E1x(0x60, 0x7EFAC3),
+            SetAMEM8BitToAbsolute7E(0x60, 0x7EFAC3),
         ],
         expected_bytes=[0x20, 0x10, 0xC3, 0xFA],
     ),
     Case(
-        label="SetAMEM16BitTo7E1x",
+        label="SetAMEM16BitToAbsolute7E",
         commands_factory=lambda: [
-            SetAMEM16BitTo7E1x(0x60, 0x7EE022),
+            SetAMEM16BitToAbsolute7E(0x60, 0x7EE022),
         ],
         expected_bytes=[0x21, 0x10, 0x22, 0xE0],
     ),
     Case(
-        label="Set7E1xToAMEM8Bit",
+        label="SetAbsolute7EToAMEM8Bit",
         commands_factory=lambda: [
-            Set7E1xToAMEM8Bit(0x7EE001, 0x60),
+            SetAbsolute7EToAMEM8Bit(0x7EE001, 0x60),
         ],
         expected_bytes=[0x22, 0x10, 0x01, 0xE0],
     ),
     Case(
-        label="Set7E1xToAMEM16Bit",
+        label="SetAbsolute7EToAMEM16Bit",
         commands_factory=lambda: [
-            Set7E1xToAMEM16Bit(0x7EE022, 0x60),
+            SetAbsolute7EToAMEM16Bit(0x7EE022, 0x60),
         ],
         expected_bytes=[0x23, 0x10, 0x22, 0xE0],
     ),
     Case(
-        label="JmpIfAMEM8BitEquals7E1x",
+        label="JmpIfAMEM8BitEqualsAbsolute7E",
         commands_factory=lambda: [
-            JmpIfAMEM8BitEquals7E1x(0x61, 0x7EE003, ["jmp"]),
+            JmpIfAMEM8BitEqualsAbsolute7E(0x61, 0x7EE003, ["jmp"]),
             ReturnSubroutine(identifier="jmp"),
         ],
         expected_bytes=[0x24, 0x11, 0x03, 0xE0, 0x08, 0xC0, 0x11],
     ),
     Case(
-        label="JmpIfAMEM16BitEquals7E1x",
+        label="JmpIfAMEM16BitEqualsAbsolute7E",
         commands_factory=lambda: [
-            JmpIfAMEM16BitEquals7E1x(0x61, 0x7EE005, ["jmp"]),
+            JmpIfAMEM16BitEqualsAbsolute7E(0x61, 0x7EE005, ["jmp"]),
             ReturnSubroutine(identifier="jmp"),
         ],
         expected_bytes=[0x25, 0x11, 0x05, 0xE0, 0x08, 0xC0, 0x11],
     ),
     Case(
-        label="JmpIfAMEM8BitNotEquals7E1x",
+        label="JmpIfAMEM8BitNotEqualsAbsolute7E",
         commands_factory=lambda: [
-            JmpIfAMEM8BitNotEquals7E1x(0x60, 0x7EFA00, ["jmp"]),
+            JmpIfAMEM8BitNotEqualsAbsolute7E(0x60, 0x7EFA00, ["jmp"]),
             ReturnSubroutine(identifier="jmp"),
         ],
         expected_bytes=[0x26, 0x10, 0x00, 0xFA, 0x08, 0xC0, 0x11],
     ),
     Case(
-        label="JmpIfAMEM16BitNotEquals7E1x",
+        label="JmpIfAMEM16BitNotEqualsAbsolute7E",
         commands_factory=lambda: [
-            JmpIfAMEM16BitNotEquals7E1x(0x62, 0x7EFA00, ["jmp"]),
+            JmpIfAMEM16BitNotEqualsAbsolute7E(0x62, 0x7EFA00, ["jmp"]),
             ReturnSubroutine(identifier="jmp"),
         ],
         expected_bytes=[0x27, 0x12, 0x00, 0xFA, 0x08, 0xC0, 0x11],
     ),
     Case(
-        label="JmpIfAMEM8BitLessThan7E1x",
+        label="JmpIfAMEM8BitLessThanAbsolute7E",
         commands_factory=lambda: [
-            JmpIfAMEM8BitLessThan7E1x(0x63, 0x7E0F00, ["jmp"]),
+            JmpIfAMEM8BitLessThanAbsolute7E(0x63, 0x7E0F00, ["jmp"]),
             ReturnSubroutine(identifier="jmp"),
         ],
         expected_bytes=[0x28, 0x13, 0x00, 0x0F, 0x08, 0xC0, 0x11],
     ),
     Case(
-        label="JmpIfAMEM16BitLessThan7E1x",
+        label="JmpIfAMEM16BitLessThanAbsolute7E",
         commands_factory=lambda: [
-            JmpIfAMEM16BitLessThan7E1x(0x61, 0x7EE100, ["jmp"]),
+            JmpIfAMEM16BitLessThanAbsolute7E(0x61, 0x7EE100, ["jmp"]),
             ReturnSubroutine(identifier="jmp"),
         ],
         expected_bytes=[0x29, 0x11, 0x00, 0xE1, 0x08, 0xC0, 0x11],
     ),
     Case(
-        label="JmpIfAMEM8BitGreaterOrEqualThan7E1x",
+        label="JmpIfAMEM8BitGreaterOrEqualThanAbsolute7E",
         commands_factory=lambda: [
-            JmpIfAMEM8BitGreaterOrEqualThan7E1x(0x60, 0x7E1000, ["jmp"]),
+            JmpIfAMEM8BitGreaterOrEqualThanAbsolute7E(0x60, 0x7E1000, ["jmp"]),
             ReturnSubroutine(identifier="jmp"),
         ],
         expected_bytes=[0x2A, 0x10, 0x00, 0x10, 0x08, 0xC0, 0x11],
     ),
     Case(
-        label="JmpIfAMEM16BitGreaterOrEqualThan7E1x",
+        label="JmpIfAMEM16BitGreaterOrEqualThanAbsolute7E",
         commands_factory=lambda: [
-            JmpIfAMEM16BitGreaterOrEqualThan7E1x(0x65, 0x7E0200, ["jmp"]),
+            JmpIfAMEM16BitGreaterOrEqualThanAbsolute7E(0x65, 0x7E0200, ["jmp"]),
             ReturnSubroutine(identifier="jmp"),
         ],
         expected_bytes=[
@@ -439,23 +439,23 @@ test_cases = [
         ],
     ),
     Case(
-        label="IncAMEM8BitBy7E1x",
-        commands_factory=lambda: [IncAMEM8BitBy7E1x(0x67, 0x7E3100)],
+        label="IncAMEM8BitByAbsolute7E",
+        commands_factory=lambda: [IncAMEM8BitByAbsolute7E(0x67, 0x7E3100)],
         expected_bytes=[0x2C, 0x17, 0x00, 0x31],
     ),
     Case(
-        label="IncAMEM16BitBy7E1x",
-        commands_factory=lambda: [IncAMEM16BitBy7E1x(0x66, 0x7E1000)],
+        label="IncAMEM16BitByAbsolute7E",
+        commands_factory=lambda: [IncAMEM16BitByAbsolute7E(0x66, 0x7E1000)],
         expected_bytes=[0x2D, 0x16, 0x00, 0x10],
     ),
     Case(
-        label="DecAMEM8BitBy7E1x",
-        commands_factory=lambda: [DecAMEM8BitBy7E1x(0x61, 0x7EA000)],
+        label="DecAMEM8BitByAbsolute7E",
+        commands_factory=lambda: [DecAMEM8BitByAbsolute7E(0x61, 0x7EA000)],
         expected_bytes=[0x2E, 0x11, 0x00, 0xA0],
     ),
     Case(
-        label="DecAMEM16BitBy7E1x",
-        commands_factory=lambda: [DecAMEM16BitBy7E1x(0x64, 0x7E0F00)],
+        label="DecAMEM16BitByAbsolute7E",
+        commands_factory=lambda: [DecAMEM16BitByAbsolute7E(0x64, 0x7E0F00)],
         expected_bytes=[0x2F, 0x14, 0x00, 0x0F],
     ),
     Case(

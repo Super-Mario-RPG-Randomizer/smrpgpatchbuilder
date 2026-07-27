@@ -1,0 +1,18 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # python-bps (a git dependency in requirements.txt) is only needed by
+      # the patch-writing management commands, not by the test suite.
+      - run: pip install Django==5.1.7 pytest==8.3.5 numpy
+      - run: PYTHONPATH=src pytest src/tests

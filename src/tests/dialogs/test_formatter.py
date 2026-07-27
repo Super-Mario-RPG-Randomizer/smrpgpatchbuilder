@@ -127,10 +127,11 @@ class TestTokenize:
         assert tokens[0].is_variable
         assert tokens[0].width_px == 16  # 2 * (7+1)
 
-    def test_long_variable_token(self):
+    def test_filename_token(self):
         tokens = _tokenize("[filename]")
         assert len(tokens) == 1
-        assert tokens[0].is_long_variable
+        assert tokens[0].is_variable
+        assert tokens[0].width_px == 80  # 8 chars * widest letter width
 
     def test_mixed_text(self):
         tokens = _tokenize("Hello world[await]\n")
