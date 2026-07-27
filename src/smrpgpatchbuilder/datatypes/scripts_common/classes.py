@@ -360,7 +360,7 @@ class Script(Generic[ScriptCommandT]):
             -1,
         )
         if index == -1:
-            raise IdentifierException("{identifier} not found")
+            raise IdentifierException(f"{identifier} not found")
         return index
 
     def set_contents(self, script: list[ScriptCommandT] | None = None) -> None:
@@ -415,13 +415,13 @@ class Script(Generic[ScriptCommandT]):
         """insert a command to this script immediately before the command matching the unique
         identifier specified."""
         index: int = self.get_index_of_identifier(identifier)
-        self._insert(index + 1, command)
+        self._insert(index, command)
 
     def insert_after_identifier(self, identifier: str, command: ScriptCommandT) -> None:
         """insert a command to this script immediately after the command matching the unique
         identifier specified."""
         index: int = self.get_index_of_identifier(identifier)
-        self._insert(index, command)
+        self._insert(index + 1, command)
 
     def replace_at_index(self, index: int, content: ScriptCommandT) -> None:
         """Replace the command at the specified list index within the script."""
@@ -568,7 +568,7 @@ class ScriptBank(Generic[ScriptT]):
             if key not in self.addresses:
                 if "ILLEGAL_JUMP_" in key:
                     destination.set_address((int(key[-4:], 16) & 0xFFFF))
-                    return
+                    continue
                 else:
                     raise IdentifierException(f"couldn't find destination {key}")
             destination.set_address(self.addresses[key] & 0xFFFF)
