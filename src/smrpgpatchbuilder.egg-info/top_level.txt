@@ -1,4 +1,1 @@
-assembler_output
-disassembler_output
 smrpgpatchbuilder
-tests
