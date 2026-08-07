@@ -121,6 +121,7 @@ class DialogCollection:
         raw_data: list[list[str]],
         compression_table: list[tuple[str, bytes | bytearray]],
         auto_format: bool = False,
+        validate: bool = False,
         dialog_bank_22_begins=DIALOG_BANK_22_BEGINS,
         dialog_bank_22_ends=DIALOG_BANK_22_ENDS,
         dialog_bank_23_begins=DIALOG_BANK_23_BEGINS,
@@ -132,6 +133,7 @@ class DialogCollection:
         self._set_raw_data(raw_data)
         self._set_compression_table([*COMPRESSION_TABLE, *compression_table])
         self._auto_format = auto_format
+        self._validate = validate
         self._dialog_bank_22_begins = dialog_bank_22_begins
         self._dialog_bank_22_ends = dialog_bank_22_ends
         self._dialog_bank_23_begins = dialog_bank_23_begins
@@ -182,12 +184,13 @@ class DialogCollection:
                         self._raw_data[bank_idx][str_idx] = s
 
         # Validate all dialogs for too many newlines between [await] boundaries
-        for bank_idx, bank_strings in enumerate(self._raw_data):
-            for str_idx, s in enumerate(bank_strings):
-                for w in validate_dialog(s):
-                    warnings.warn(
-                        f"Dialog bank 0x{bank_idx + 0x22:02x} index {str_idx}: {w}\n  Text: {s!r}"
-                    )
+        if self._validate:
+            for bank_idx, bank_strings in enumerate(self._raw_data):
+                for str_idx, s in enumerate(bank_strings):
+                    for w in validate_dialog(s):
+                        warnings.warn(
+                            f"Dialog bank 0x{bank_idx + 0x22:02x} index {str_idx}: {w}\n  Text: {s!r}"
+                        )
 
         compressed_text = [
             [compress(d, self.compression_table) for d in self._raw_data[0]],

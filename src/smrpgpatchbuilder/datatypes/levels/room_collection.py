@@ -32,6 +32,7 @@ class RoomCollection:
         large_partition_table: bool = False,
         force_first_npc: NPC | None = None,
         empty_npc: NPC | None = None,
+        validate: bool = False,
     ):
         """Initialize the room collection.
 
@@ -40,6 +41,7 @@ class RoomCollection:
             large_partition_table: If True, use extended partition table at 0x1DEBE0
             force_first_npc: If provided, this NPC is always placed at index 0 in the NPC table
             empty_npc: The EMPTY_NPC to use for filling gaps when NPCs have force_id set
+            validate: If True, emit warnings when packed offsets exceed their bit-field range
         """
         assert len(rooms) == 512, f"Expected 512 rooms, got {len(rooms)}"
         # Ensure last room (511) is None
@@ -49,6 +51,7 @@ class RoomCollection:
         self._large_partition_table = large_partition_table
         self._force_first_npc = force_first_npc
         self._empty_npc = empty_npc
+        self._validate = validate
 
     def _get_npc_signature(
         self, npc: NPC, room_obj: BaseRoomObject | None = None
@@ -971,7 +974,7 @@ class RoomCollection:
                 base_assigned_npc = min(all_npc_indices)
                 assigned_npc_offset = npc_index - base_assigned_npc
 
-                if assigned_npc_offset > 7:
+                if self._validate and assigned_npc_offset > 7:
                     import logging
 
                     msg = (
@@ -997,7 +1000,9 @@ class RoomCollection:
                 base_action_script = obj.action_script
                 action_script_offset = 0
 
-            if action_script_offset > (15 if isinstance(obj, BattlePackNPC) else 3):
+            if self._validate and action_script_offset > (
+                15 if isinstance(obj, BattlePackNPC) else 3
+            ):
                 import logging
 
                 msg = (
@@ -1040,7 +1045,7 @@ class RoomCollection:
                 battle_pack_offset = obj.battle_pack - base_battle_pack
 
                 # Debug logging for battle_pack (LazyShell max is 255 for BattlePack NPCs!)
-                if base_battle_pack > 255:
+                if self._validate and base_battle_pack > 255:
                     import logging
 
                     msg = (
@@ -1050,7 +1055,7 @@ class RoomCollection:
                         f"  All battle_packs in group: {all_battle_packs}"
                     )
                     logging.warning(msg)
-                if battle_pack_offset > 15:
+                if self._validate and battle_pack_offset > 15:
                     import logging
 
                     msg = (
@@ -1085,7 +1090,7 @@ class RoomCollection:
                     event_script_offset = 0
 
                 # Debug logging for event_script
-                if event_script_offset > 7:
+                if self._validate and event_script_offset > 7:
                     import logging
 
                     msg = (
