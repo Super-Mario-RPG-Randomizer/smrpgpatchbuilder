@@ -3,7 +3,7 @@
 from django.core.management.base import BaseCommand
 from smrpgpatchbuilder.datatypes.allies.ally import Ally, LevelUp, AllyCoordinate
 from smrpgpatchbuilder.datatypes.spells.classes import SpellCollection
-from smrpgpatchbuilder.utils.disassembler_common import writeline
+from smrpgpatchbuilder.management.commands.disassembler_common import writeline
 import os
 import importlib
 

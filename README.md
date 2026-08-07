@@ -84,7 +84,7 @@ Make sure that even if you don't rename any variables, **do not delete any lines
 
 Run 
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py variableparser
+PYTHONPATH=src python manage.py variableparser
 ```
 in the root folder of this repo. It will create files in `./src/disassembler_output/variables` that define Python variables according to the names you gave in Step 1. Everything else you disassemble will be using these.
 
@@ -92,10 +92,10 @@ in the root folder of this repo. It will create files in `./src/disassembler_out
 
 Disassemble items, spells, monster attacks, and packets by running:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py itemdisassembler --rom "/path/to/your/smrpg/rom"
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py enemyattackdisassembler --rom "/path/to/your/smrpg/rom"
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py spelldisassembler --rom "/path/to/your/smrpg/rom"
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packetdisassembler --rom "/path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py itemdisassembler --rom "/path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py enemyattackdisassembler --rom "/path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py spelldisassembler --rom "/path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py packetdisassembler --rom "/path/to/your/smrpg/rom"
 ```
 
 These will produce: 
@@ -110,7 +110,7 @@ It is important to do these next because other things will use these. Event scri
 
 Disassemble monsters:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py enemydisassembler --rom "/path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py enemydisassembler --rom "/path/to/your/smrpg/rom"
 ```
 
 These will produce `./src/disassembler_output/enemies/enemies.py`. It is important to do this now because other data types (battle animations, monster AI, battle packs) depend on this data.
@@ -125,11 +125,11 @@ Now you can disassemble whatever else you want. There are no more dependencies.
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py eventconverter --rom "path/to/your/smrpg/rom" # be warned, this will probably take a few hours
+PYTHONPATH=src python manage.py eventconverter --rom "path/to/your/smrpg/rom" # be warned, this will probably take a few hours
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py eventassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py eventassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -245,11 +245,11 @@ Notes:
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py animationdisassembler --rom "path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py animationdisassembler --rom "path/to/your/smrpg/rom"
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py animationassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py animationassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -314,11 +314,11 @@ This is still easily the most volatile part of the game that this repo lets you 
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py enemydisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py enemydisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py enemyassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py enemyassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -388,11 +388,11 @@ This was based off of the battle disassembler that patcdr made in smrpg randomiz
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py battledisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py battledisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py battleassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py battleassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -446,11 +446,11 @@ You can Ctrl+F the name of a command in Lazy Shell in src/smrpgpatchbuilder/data
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py enemyattackdisassembler --rom "path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py enemyattackdisassembler --rom "path/to/your/smrpg/rom"
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py enemyattackassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py enemyattackassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -466,11 +466,11 @@ The disassembler creates an `EnemyAttackCollection` (in the same file) that inst
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py spelldisassembler --rom "path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py spelldisassembler --rom "path/to/your/smrpg/rom"
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py spellassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py spellassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -486,11 +486,11 @@ The disassembler creates a `SpellCollection` (in the same file) that instantiate
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py spelldisassembler --rom "path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py spelldisassembler --rom "path/to/your/smrpg/rom"
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py spellassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py spellassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -561,11 +561,11 @@ The assembler can rename your characters, but be aware that it will not change t
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py itemdisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py itemdisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py itemassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py itemassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -646,11 +646,11 @@ The disassembler creates an `ItemCollection` (in the same file) that instantiate
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py graphicsdisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py graphicsdisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py graphicsassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py graphicsassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -706,11 +706,11 @@ Disassembly will produce a `SpriteCollection`. If you want to import your sprite
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py shopdisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py shopdisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py shopassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py shopassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -742,11 +742,11 @@ shops[SH06_FROG_COIN_EMPORIUM] = Shop(
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py dialogdisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py dialogdisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py dialogassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py dialogassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -793,11 +793,11 @@ Your ROM also uses a customizable compression table which gets written to `disas
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py battledialogdisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py battledialogdisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py battledialogassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py battledialogassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -815,11 +815,11 @@ The disassembler creates a `BattleDialogCollection` (in the same file). If you w
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packdisassembler --rom "path/to/your/smrpg/rom"
+PYTHONPATH=src python manage.py packdisassembler --rom "path/to/your/smrpg/rom"
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py packassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -886,14 +886,14 @@ The room disassembler handles loading events, loading music, event tiles, exit f
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py roomdisassembler --rom "path/to/your/smrpg/rom"  --large-partition-table
+PYTHONPATH=src python manage.py roomdisassembler --rom "path/to/your/smrpg/rom"  --large-partition-table
 # The --large-partition-table argument can be included or omitted. 
 # If included, it will try to read partitions from 0x1DEBE0 instead of 0x1DDE00. 
 # You should only use this if you've already assembled your rooms before such that the partitions have moved here.
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py roomassembler -r path/to/your/smrpg/rom -t -b --large-partition-table
+PYTHONPATH=src python manage.py roomassembler -r path/to/your/smrpg/rom -t -b --large-partition-table
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 # The --large-partition-table argument can be included or omitted. 
 # If included, it will write partitions from 0x1DEBE0 instead of 0x1DDE00. 
@@ -1144,11 +1144,11 @@ Here are some things to be aware of:
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packetdisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py packetdisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packetassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py packetassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:
@@ -1176,11 +1176,11 @@ The disassembler produces a list of 255 packet definitions and a PacketCollectio
 
 Disassemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py worldmaplocationdisassembler --rom "path/to/your/smrpg/rom" 
+PYTHONPATH=src python manage.py worldmaplocationdisassembler --rom "path/to/your/smrpg/rom" 
 ```
 Assemble:
 ```bash
-PYTHONPATH=src python src/smrpgpatchbuilder/manage.py worldmaplocationassembler -r path/to/your/smrpg/rom -t -b
+PYTHONPATH=src python manage.py worldmaplocationassembler -r path/to/your/smrpg/rom -t -b
 # -r generates a ROM patch, -t generates a text file, -b generates a FlexHEX .bin
 ```
 Writes to:

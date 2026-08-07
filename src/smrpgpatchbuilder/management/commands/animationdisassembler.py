@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from smrpgpatchbuilder.utils.disassembler_common import (
+from smrpgpatchbuilder.management.commands.disassembler_common import (
     bytearray_hex_literal,
     shortify,
     shortify_signed,

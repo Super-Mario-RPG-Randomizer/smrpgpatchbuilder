@@ -4,7 +4,7 @@ This disassembler reads world map location data from a Super Mario RPG ROM and o
 containing all 56 world map locations with their coordinates, flags, and navigation data.
 
 Usage:
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py worldmaplocationdisassembler --rom "/path/to/your/smrpg/rom"
+    PYTHONPATH=src python manage.py worldmaplocationdisassembler --rom "/path/to/your/smrpg/rom"
 
 This will produce:
     ./src/disassembler_output/world_map_locations/world_map_locations.py
@@ -22,7 +22,7 @@ The output file will contain:
 import os
 import shutil
 from django.core.management.base import BaseCommand
-from smrpgpatchbuilder.utils.disassembler_common import writeline
+from smrpgpatchbuilder.management.commands.disassembler_common import writeline
 from .input_file_parser import load_arrays_from_input_files
 from smrpgpatchbuilder.datatypes.world_map_locations.classes import (
     WORLD_MAP_LOCATION_BASE_ADDRESS,

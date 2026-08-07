@@ -13,3 +13,7 @@ config/**
 /.claude/history/
 /.claude/*.log
 /.claude/cache/
+
+# build artifacts
+build/
+src/*.egg-info

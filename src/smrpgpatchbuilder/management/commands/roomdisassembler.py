@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from smrpgpatchbuilder.datatypes.levels.classes import *
-from smrpgpatchbuilder.utils.disassembler_common import (
+from smrpgpatchbuilder.management.commands.disassembler_common import (
     shortify,
     writeline,
     bit_bool_from_num,

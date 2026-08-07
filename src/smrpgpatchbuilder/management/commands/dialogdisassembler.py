@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from smrpgpatchbuilder.utils.disassembler_common import shortify
+from smrpgpatchbuilder.management.commands.disassembler_common import shortify
 from smrpgpatchbuilder.datatypes.dialogs.utils import decompress, COMPRESSION_TABLE
 import shutil
 import os

@@ -1,4 +1,3 @@
-from django.core.management.base import BaseCommand
 import math, functools, copy, string, random
 
 from smrpgpatchbuilder.datatypes.sprites.ids.misc import (

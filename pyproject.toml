@@ -17,9 +17,11 @@ classifiers = [
 ]
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
-dependencies=[
-	"Django>=5.1"
-]
+dependencies=[]
+
+[project.optional-dependencies]
+# Only the dis/assembler CLIs (run from a repo checkout) need Django.
+cli = ["Django>=5.1"]
 
 [project.urls]
 Homepage = "https://github.com/pidgezero-one/smrpgpatchbuilder"
@@ -28,6 +30,8 @@ Issues = "https://github.com/pidgezero-one/smrpgpatchbuilder/issues"
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["smrpgpatchbuilder*"]
+# CLI dis/assemblers are a repo-checkout workflow, not part of the importable API.
+exclude = ["smrpgpatchbuilder.management*"]
 
 [tool.pytest.ini_options]
 addopts = "-v -s"

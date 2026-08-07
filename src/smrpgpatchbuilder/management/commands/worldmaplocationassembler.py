@@ -4,9 +4,9 @@ This assembler reads the WorldMapLocationCollection from disassembler output and
 to create ROM patches for world map location data.
 
 Usage:
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py worldmaplocationassembler --rom "/path/to/your/smrpg/rom"
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py worldmaplocationassembler --text
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py worldmaplocationassembler --bin
+    PYTHONPATH=src python manage.py worldmaplocationassembler --rom "/path/to/your/smrpg/rom"
+    PYTHONPATH=src python manage.py worldmaplocationassembler --text
+    PYTHONPATH=src python manage.py worldmaplocationassembler --bin
 
 Options:
     -r, --rom: Path to a Mario RPG ROM to create a BPS patch

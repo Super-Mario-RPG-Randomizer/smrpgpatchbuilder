@@ -4,7 +4,7 @@ This disassembler reads the formation pack data from a Super Mario RPG ROM
 and outputs Python files containing formations and packs as separate declarations.
 
 Usage:
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packdisassembler --rom "/path/to/your/smrpg/rom"
+    PYTHONPATH=src python manage.py packdisassembler --rom "/path/to/your/smrpg/rom"
 
 This will produce:
     ./src/disassembler_output/packs/pack_collection.py
@@ -28,7 +28,7 @@ Note:
 import os
 import shutil
 from django.core.management.base import BaseCommand
-from smrpgpatchbuilder.utils.disassembler_common import shortify, writeline
+from smrpgpatchbuilder.management.commands.disassembler_common import shortify, writeline
 from .input_file_parser import load_arrays_from_input_files, load_class_names_from_config
 from smrpgpatchbuilder.datatypes.battles.ids.misc import (
     PACK_BASE_ADDRESS,

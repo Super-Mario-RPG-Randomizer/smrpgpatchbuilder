@@ -4,7 +4,7 @@ This disassembler reads shop data from a Super Mario RPG ROM and outputs a Pytho
 containing all 33 shops with their items and settings.
 
 Usage:
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py shopdisassembler --rom "/path/to/your/smrpg/rom"
+    PYTHONPATH=src python manage.py shopdisassembler --rom "/path/to/your/smrpg/rom"
 
 This will produce:
     ./src/disassembler_output/shops/shops.py
@@ -21,7 +21,7 @@ The output file will contain:
 import os
 import shutil
 from django.core.management.base import BaseCommand
-from smrpgpatchbuilder.utils.disassembler_common import writeline
+from smrpgpatchbuilder.management.commands.disassembler_common import writeline
 from .input_file_parser import load_arrays_from_input_files, load_class_names_from_config
 from smrpgpatchbuilder.datatypes.shops.classes import (
     SHOP_BASE_ADDRESS,

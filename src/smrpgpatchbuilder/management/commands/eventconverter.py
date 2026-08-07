@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 import sys, os, shutil
 
-from smrpgpatchbuilder.utils.disassembler_common import (
+from smrpgpatchbuilder.management.commands.disassembler_common import (
     bytearray_hex_literal,
     writeline,
 )

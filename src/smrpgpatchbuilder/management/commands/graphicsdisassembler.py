@@ -11,7 +11,7 @@ from smrpgpatchbuilder.datatypes.graphics.classes import (
     Tile,
     Clone,
 )
-from smrpgpatchbuilder.utils.disassembler_common import (
+from smrpgpatchbuilder.management.commands.disassembler_common import (
     shortify,
     writeline,
 )

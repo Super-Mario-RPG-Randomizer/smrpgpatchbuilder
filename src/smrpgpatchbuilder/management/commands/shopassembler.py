@@ -4,9 +4,9 @@ This assembler reads the ShopCollection from disassembler output and renders it
 to create ROM patches for shop data.
 
 Usage:
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py shopassembler --rom "/path/to/your/smrpg/rom"
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py shopassembler --text
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py shopassembler --bin
+    PYTHONPATH=src python manage.py shopassembler --rom "/path/to/your/smrpg/rom"
+    PYTHONPATH=src python manage.py shopassembler --text
+    PYTHONPATH=src python manage.py shopassembler --bin
 
 Options:
     -r, --rom: Path to a Mario RPG ROM to create a BPS patch

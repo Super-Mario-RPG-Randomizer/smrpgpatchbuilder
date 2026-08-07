@@ -4,9 +4,9 @@ This assembler reads the PackCollection from disassembler output and renders it
 to create ROM patches for formation pack data.
 
 Usage:
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packassembler --rom "/path/to/your/smrpg/rom"
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packassembler --text
-    PYTHONPATH=src python src/smrpgpatchbuilder/manage.py packassembler --bin
+    PYTHONPATH=src python manage.py packassembler --rom "/path/to/your/smrpg/rom"
+    PYTHONPATH=src python manage.py packassembler --text
+    PYTHONPATH=src python manage.py packassembler --bin
 
 Options:
     -r, --rom: Path to a Mario RPG ROM to create a BPS patch

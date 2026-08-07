@@ -86,7 +86,9 @@ NEW_VERSION="$NEW_VERSION" perl -0777 -i -pe '
 ' "$PYPROJECT"
 
 # rm -rf dist/
-rm -rf dist/
+# build/ and *.egg-info must go too: a stale egg-info makes setuptools ignore
+# the packages.find exclude and silently ship smrpgpatchbuilder.management.
+rm -rf dist/ build/ src/*.egg-info
 
 # python -m build
 python3 -m build

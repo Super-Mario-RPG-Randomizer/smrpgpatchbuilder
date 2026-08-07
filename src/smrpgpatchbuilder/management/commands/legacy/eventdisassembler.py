@@ -34,7 +34,7 @@ from .eventtables import (
     _0x84_flags,
 )
 from ..input_file_parser import load_class_names_from_config
-from smrpgpatchbuilder.utils.disassembler_common import (
+from smrpgpatchbuilder.management.commands.disassembler_common import (
     shortify,
     bit,
     dbyte,
