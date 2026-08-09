@@ -3,6 +3,7 @@
 from django.core.management.base import BaseCommand
 from pathlib import Path
 from smrpgpatchbuilder.datatypes.items.encoding import decode_item_description
+from smrpgpatchbuilder.datatypes.items.enums import EffectType
 
 class Command(BaseCommand):
     help = "Disassemble items from ROM and generate Python item definitions"
@@ -511,14 +512,13 @@ class Command(BaseCommand):
         lines.append(f"    _price: int = {data['price']}")
 
         # effect type
+        # EffectType is a bitfield, so a modded ROM can legitimately combine bits
+        # (0x03 = PROTECTION | INFLICTION). Emit every bit that is set.
         if data["effect_type"] != 0:
-            effect_map = {
-                0x01: "EffectType.PROTECTION",
-                0x02: "EffectType.INFLICTION",
-                0x04: "EffectType.NULLIFICATION",
-            }
-            if data["effect_type"] in effect_map:
-                lines.append(f"    _effect_type = {effect_map[data['effect_type']]}")
+            flags = " | ".join(
+                f"EffectType.{flag.name}" for flag in EffectType(data["effect_type"])
+            )
+            lines.append(f"    _effect_type = {flags}")
 
         # inflict type
         if 0 <= data["inflict_type"] < 8:

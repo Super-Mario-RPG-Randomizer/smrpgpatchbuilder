@@ -30,7 +30,15 @@ class ItemTypeValue(enum.IntEnum):
     ACCESSORY = 0b10
     ITEM = 0b11
 
-class EffectType(enum.IntEnum):
+class EffectType(enum.IntFlag):
+    """Item stat byte 1. This is a bitfield, not a set of mutually exclusive
+    choices: the equip routine at $C2:BAE8 tests PROTECTION and INFLICTION with
+    two independent BIT instructions, so PROTECTION | INFLICTION grants both
+    status immunity (item byte 7) and permanent stat buffs (item byte 8).
+
+    NULLIFICATION is never tested on the equip path; it only applies to
+    consumables."""
+
     INFLICTION = 0x02
     PROTECTION = 0x01
     NULLIFICATION = 0x04

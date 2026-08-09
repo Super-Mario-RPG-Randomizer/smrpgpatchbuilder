@@ -212,6 +212,10 @@ class Item:
         """Update the effect type"""
         self._effect_type = effect_type
 
+    def _effect_type_byte(self) -> int:
+        """The value of item stat byte 1's effect type bits."""
+        return int(self._effect_type or 0)
+
     @property
     def inflict_type(self) -> InflictFunction | None:
         """The function that determines infliction logic"""
@@ -466,9 +470,7 @@ class Item:
             val |= 1 << 7
         data += ByteField(val).as_bytes()
 
-        val = 0
-        if self.effect_type is not None:
-            val = self.effect_type
+        val = self._effect_type_byte()
         if self.overworld_menu_behaviour == OverworldMenuBehaviour.LEAD_TO_FP:
             val |= 1 << 5
         if self.overworld_menu_fill_hp:
@@ -532,6 +534,21 @@ ItemT = TypeVar("ItemT", bound=Item)
 
 class Equipment(Item):
     """Base class for weapons, armor, and accessories."""
+
+    def _effect_type_byte(self) -> int:
+        """Always both, for every equip.
+
+        The equip routine at $C2:BAE8 ORs byte 7 into the status immunity byte
+        when PROTECTION is set and ORs byte 8 into the enhancement byte when
+        INFLICTION is set, as two independent BIT tests. Either bit with an empty
+        source byte ORs in zero, so enabling both unconditionally costs nothing
+        and removes the failure mode entirely: any code that later adds a status
+        immunity or a temp buff to an equip just works, with nothing to remember.
+
+        NULLIFICATION is not representable here because it is never tested on the
+        equip path.
+        """
+        return int(EffectType.PROTECTION | EffectType.INFLICTION)
 
     def set_speed(self, speed: int) -> None:
         """Modify the base speed increase for this equip."""
