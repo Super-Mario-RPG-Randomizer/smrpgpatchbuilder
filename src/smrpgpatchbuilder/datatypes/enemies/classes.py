@@ -780,8 +780,14 @@ class EnemyCollection:
                 return enemy
         raise KeyError(f"No enemy of type {enemy_type.__name__} found in collection")
 
-    def render(self) -> dict[int, bytearray]:
+    def render(self, psychopath: bool = True) -> dict[int, bytearray]:
         """render all enemies including their psychopath messages and pointer table.
+
+        args:
+            psychopath: if False, leave psychopath messages and their pointer table
+                untouched. Messages are written uncompressed, so a full round-trip of
+                vanilla text does not fit the 5235-byte region; opting out keeps the
+                rest of the enemy data usable.
 
         returns:
             dictionary mapping rom addresses to bytearrays
@@ -846,6 +852,9 @@ class EnemyCollection:
             result.append(0x02)  # [await] - pauses for user input
             result.append(0x00)  # null terminator
             return result
+
+        if not psychopath:
+            return patch
 
         # Sort enemies by monster_id to ensure correct pointer table ordering
         sorted_enemies = sorted(self.enemies, key=lambda e: e.monster_id)

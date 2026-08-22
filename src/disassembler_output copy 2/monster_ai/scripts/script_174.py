@@ -1,0 +1,82 @@
+# 174 - CULEX3DEnemy
+
+from smrpgpatchbuilder.datatypes.monster_scripts import *
+from smrpgpatchbuilder.datatypes.monster_scripts.commands import *
+from smrpgpatchbuilder.datatypes.monster_scripts.arguments.types.classes import DoNothing
+from ...variables.battle_event_names import *
+from ...variables.battle_variable_names import *
+from ...items.items import *
+from ...spells.spells import *
+from ...enemies.enemies import *
+from ...enemy_attacks.attacks import *
+from smrpgpatchbuilder.datatypes.monster_scripts.arguments import *
+
+script = MonsterScript([
+	IfVarBitsClear(BV7EE001, [0]),
+	RunBattleDialog(128),
+	RunBattleEvent(BE0077_SCREEN_FLASHES_WHITE),
+	Attack(CULEXTURNSAttack),
+	SetTarget(AT_LEAST_ONE_OPPONENT),
+	Attack(MeteorAttack),
+	SetTarget(AT_LEAST_ONE_OPPONENT),
+	Attack(DUMMYAttack17),
+	SetVarBits(BV7EE001, [0]),
+	Wait1TurnandRestartScript(),
+    
+	IfVarBitsClear(BV7EE001, [1]),
+	Attack(CULEXTURNSAttack),
+	RunBattleDialog(139),
+	CastSpell(FlameStoneSpell, MeteorBlastSpell, DarkStarSpell),
+	SetVarBits(BV7EE001, [1]),
+	Wait1TurnandRestartScript(),
+
+	IfVarBitsClear(BV7EE001, [2]),
+	Attack(CULEXTURNSAttack),
+	RunBattleDialog(140),
+	CastSpell(ShredderSpell),
+	SetVarBits(BV7EE001, [2]),
+	Wait1TurnandRestartScript(),
+
+	IfVarBitsClear(BV7EE001, [3]),
+	Attack(CULEXTURNSAttack),
+	RunBattleDialog(148),
+	EnableCommand([COMMAND_ATTACK, COMMAND_SPECIAL, COMMAND_ITEM]),
+	ClearVar(BV7EE005_ATTACK_PHASE_COUNTER),
+	ClearVarBits(BV7EE002, [0]),
+	RunBattleDialog(141),
+	Attack(Attack0),
+	SetVarBits(BV7EE001, [3]),
+	Wait1TurnandRestartScript(),
+
+	IfVarBitsClear(BV7EE001, [4]),
+	Attack(CULEXTURNSAttack),
+	RunBattleDialog(142),
+	CastSpell(FlameStoneSpell, MeteorBlastSpell, DarkStarSpell),
+	SetVarBits(BV7EE001, [4]),
+	Wait1TurnandRestartScript(),
+
+	
+	IfLastMonsterStanding(),
+	Attack(CULEXTURNSAttack),
+	RunBattleDialog(143),
+	Attack(FinalClawAttack),
+	ClearVarBits(BV7EE001, [1, 2, 3, 4]),
+	Wait1TurnandRestartScript(),
+
+	
+	Attack(CULEXTURNSAttack),
+	RunBattleDialog(143),
+	SetTarget(AT_LEAST_ONE_OPPONENT),
+	Attack(MeteorAttack),
+	SetTarget(AT_LEAST_ONE_OPPONENT),
+	Attack(DUMMYAttack17),
+	ClearVarBits(BV7EE001, [1, 2, 3, 4]),
+	Wait1TurnandRestartScript(),
+    
+
+	StartCounterCommands(),
+	IfHPBelow(0),
+	RunObjectSequence(3),
+	RemoveTarget(SELF),
+	Wait1TurnandRestartScript()
+])

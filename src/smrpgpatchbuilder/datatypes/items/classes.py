@@ -399,7 +399,7 @@ class Item:
         Supported characters: latin-1 characters plus special menu characters (-, ', !, #).
         """
         # Special characters that are encoded differently in item menu names
-        special_chars = {'-', "'", "'", '!', '#'}
+        special_chars = {'-', "'", "’", '!', '#'}
         # Validate that the name can be encoded
         try:
             for char in name:
@@ -434,7 +434,7 @@ class Item:
             for char in self._item_name:
                 if char == '-':
                     encoded_name.append(0x7D)
-                elif char == "'" or char == "'":
+                elif char == "'" or char == "’":
                     encoded_name.append(0x7E)
                 elif char == '!':
                     encoded_name.append(0x7B)
@@ -675,10 +675,13 @@ class Weapon(Equipment):
 
     def render(self) -> dict[int, bytearray]:
         """Get data for this item in `{0x123456: bytearray([0x00])}` format"""
-        if self.item_id > 40:
-            raise TypeError("weapon IDs can only be 0-40")
         patch = super().render()
         if self.price == 0:
+            return patch
+        # the timed-hit table only has slots for weapon IDs 0-40; a weapon-typed
+        # item above that has no slot, and writing one would clobber whatever
+        # follows the table
+        if self.item_id > 40:
             return patch
         base_addr = ITEMS_BASE_TIMING_ADDRESS + (self.item_id * 4)
 

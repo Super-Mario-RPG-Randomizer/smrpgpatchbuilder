@@ -1610,7 +1610,11 @@ class A_SetVRAMPriority(UsableActionScriptCommand, ActionScriptCommand):
 
 
 class A_SetPriority(UsableActionScriptCommand, ActionScriptCommand):
-    """(unknown how this differs from `A_SetVRAMPriority`)
+    """Set the NPC's three layer priority bits, the same field exposed as
+    `priority_0` / `priority_1` / `priority_2` on the NPC model.
+
+    This is not the same field as `A_SetVRAMPriority`, which writes a separate
+    two-bit sprite priority.
 
     ## Lazy Shell command
         `Priority = ...`
@@ -1622,7 +1626,10 @@ class A_SetPriority(UsableActionScriptCommand, ActionScriptCommand):
         3 bytes
 
     Args:
-        priority (int): The priority level. Must be 0, 1, 2, or 3.
+        priority (int): A three-bit mask, 0 to 7: bit 0 = `priority_0`,
+            bit 1 = `priority_1`, bit 2 = `priority_2`. All three bits are
+            overwritten, so any bit left clear is cleared on the NPC. The
+            room loader's default for most NPCs is 4 (`priority_2` only).
         identifier (str | None): Give this command a label if you want another command to jump to it.
     """
 
@@ -1632,12 +1639,12 @@ class A_SetPriority(UsableActionScriptCommand, ActionScriptCommand):
 
     @property
     def priority(self) -> int:
-        """The priority level."""
+        """The three-bit priority mask."""
         return self._priority
 
     def set_priority(self, priority: int) -> None:
-        """Set the priority level."""
-        assert 0 <= priority <= 3
+        """Set the priority bitmask."""
+        assert 0 <= priority <= 7
         self._priority = priority
 
     def __init__(self, priority: int, identifier: str | None = None) -> None:

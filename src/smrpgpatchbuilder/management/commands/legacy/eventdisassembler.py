@@ -1659,7 +1659,11 @@ fd_names[0x88] = set_bit_7_offset
 fd_names[0x89] = clear_bit_7_offset
 # 0x8A undocumented
 fd_names[0x8B] = named("set_bit_3_offset", dbyte(0x0158))
-# 0x8C - 0x8F undocumented
+# 0x8C - 0x8D undocumented
+fd_names[0x8E] = named(
+    "darken_layers_except_palette_rows", byte_int(), byte_int(), byte_int()
+)
+# 0x8F undocumented
 fd_names[0x90] = named("store_bytes_to_0335_0556", byte(), byte())
 fd_names[0x91] = named("store_FF_to_0335")
 fd_names[0x92] = named("store_01_to_0334")

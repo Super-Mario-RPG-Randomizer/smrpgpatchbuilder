@@ -87,14 +87,23 @@ class Command(BaseCommand):
                     'index': packet_index,
                     'name': packet_names[packet_index],
                     'sprite_id': sprite_id,
-                    'shadow': shadow,
                     'action_script_id': action_script_id,
-                    'unknown_bits': [unknown_bit_0, unknown_bit_1, unknown_bit_2],
-                    'unknown_bytes': [
-                        unknown_byte_0, unknown_byte_1, unknown_byte_2,
-                        unknown_byte_3, unknown_byte_4, unknown_byte_5, unknown_byte_6
-                    ],
+                    # keyword names must match Packet.__init__
+                    'b0': unknown_byte_0,
+                    'vram_size': unknown_byte_1,
+                    'sprite_priority': unknown_byte_2,
+                    'layer_priority': unknown_byte_3,
+                    'b2b2': unknown_bit_0,
+                    'b2b3': unknown_bit_1,
+                    'b2b4': unknown_bit_2,
+                    'show_shadow': shadow,
+                    'b2': unknown_byte_5,
+                    'b4': unknown_byte_6,
                 }
+                # ponytail: byte2 bits 0-1 (unknown_byte_4) are dropped - Packet
+                # has no field for them and render() zeroes them. Set on 48
+                # packets in vanilla too, so this is a pre-existing lossy spot,
+                # not ROM-specific. Add a Packet field if it ever matters.
 
                 packets.append(packet_data)
 
@@ -123,16 +132,20 @@ class Command(BaseCommand):
                 file.write(f"{packet_name} = Packet(\n".encode("utf8"))
                 file.write(f"    packet_id={packet_data['index']},\n".encode("utf8"))
                 file.write(f"    sprite_id={sprite_name},\n".encode("utf8"))
-                file.write(f"    shadow={packet_data['shadow']},\n".encode("utf8"))
                 file.write(f"    action_script_id={action_name},\n".encode("utf8"))
-
-                # Always write unknown_bits
-                bits_str = str(packet_data['unknown_bits'])
-                file.write(f"    unknown_bits={bits_str},\n".encode("utf8"))
-
-                # Always write unknown_bytes
-                bytes_str = "bytearray([" + ", ".join(f"0x{b:02X}" for b in packet_data['unknown_bytes']) + "])"
-                file.write(f"    unknown_bytes={bytes_str},\n".encode("utf8"))
+                for key in (
+                    "b0",
+                    "vram_size",
+                    "sprite_priority",
+                    "layer_priority",
+                    "b2b2",
+                    "b2b3",
+                    "b2b4",
+                    "show_shadow",
+                    "b2",
+                    "b4",
+                ):
+                    file.write(f"    {key}={packet_data[key]},\n".encode("utf8"))
 
                 file.write(")\n".encode("utf8"))
 

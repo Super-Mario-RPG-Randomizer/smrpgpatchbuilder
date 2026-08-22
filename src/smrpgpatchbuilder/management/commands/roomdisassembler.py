@@ -265,9 +265,11 @@ class Command(BaseCommand):
             # Remove the SPRxxxx_ prefix to get the descriptive name
             sprite_name = sprite_name_full.split('_', 1)[1] if '_' in sprite_name_full else sprite_name_full
 
-            # Track usage count for this sprite
-            sprite_usage_count[sprite_val] = sprite_usage_count.get(sprite_val, 0) + 1
-            usage_count = sprite_usage_count[sprite_val]
+            # Track usage count by name, not sprite id: two sprite ids can share a
+            # descriptive name (e.g. SPR0089_GENO_DOLL / SPR0172_GENO_DOLL), and
+            # counting per id lets both emit GENO_DOLL_NPC, shadowing the first
+            sprite_usage_count[sprite_name] = sprite_usage_count.get(sprite_name, 0) + 1
+            usage_count = sprite_usage_count[sprite_name]
 
             # Generate variable name: SpriteName_NPC or SpriteName_NPC_2, SpriteName_NPC_3, etc.
             if usage_count == 1:
@@ -1033,6 +1035,7 @@ class Command(BaseCommand):
 
         # Write imports
         writeline(collection_file, "from smrpgpatchbuilder.datatypes.levels.room_collection import RoomCollection")
+        writeline(collection_file, "from .npcs import EMPTY_NPC")
         for i in range(512):
             writeline(
                 collection_file,
@@ -1049,7 +1052,8 @@ class Command(BaseCommand):
             writeline(collection_file, "        room_%i,  # %i: %s" % (i, i, room_name))
 
         writeline(collection_file, "    ],")
-        writeline(collection_file, "    large_partition_table=%r" % large_partition_table)
+        writeline(collection_file, "    large_partition_table=%r," % large_partition_table)
+        writeline(collection_file, "    empty_npc=EMPTY_NPC")
         writeline(collection_file, ")")
         collection_file.close()
 

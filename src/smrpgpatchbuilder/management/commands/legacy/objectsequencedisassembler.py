@@ -792,10 +792,13 @@ names[0x13] = named(
 )
 names[0x14] = set_object_memory_bits(0x0E)
 names[0x15] = named("set_movement_bits", flags(prefix="_0x0AFlags", table=_0x0A_flags))
-# 0x16 - 0x20 undocumented
+# 0x16 - 0x1F undocumented
+names[0x20] = named("toggle_subroutine_slots", byte_int())
 names[0x21] = named("bpl_26_27_28")
 names[0x22] = named("bmi_26_27_28")
-# 0x23 - 0x25 undocumented
+# 0x23 undocumented
+names[0x24] = named("set_subroutine_x_targets", short_int(), short_int())
+# 0x25 undocumented
 names[0x26] = named(
     "embedded_animation_routine",
     con(0x26),

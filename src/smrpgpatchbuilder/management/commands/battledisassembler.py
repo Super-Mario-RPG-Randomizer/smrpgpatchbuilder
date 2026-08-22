@@ -510,7 +510,7 @@ class Command(BaseCommand):
                                 args["spells"] = "[%s]" % SPELLS[nums[0]]
                             else:
                                 args["spells"] = "[%s]" % ", ".join(
-                                    SPELLS[nums[0]], SPELLS[nums[1]]
+                                    [SPELLS[nums[0]], SPELLS[nums[1]]]
                                 )
                         case 0x03:
                             cls = "IfTargetedByItem"
@@ -522,7 +522,7 @@ class Command(BaseCommand):
                                 args["items"] = "[%s]" % ITEMS[nums[0]]
                             else:
                                 args["items"] = "[%s]" % ", ".join(
-                                    ITEMS[nums[0]], ITEMS[nums[1]]
+                                    [ITEMS[nums[0]], ITEMS[nums[1]]]
                                 )
                         case 0x04:
                             cls = "IfTargetedByElement"

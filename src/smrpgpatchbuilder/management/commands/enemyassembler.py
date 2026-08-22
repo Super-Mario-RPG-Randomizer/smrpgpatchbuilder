@@ -33,6 +33,12 @@ class Command(BaseCommand):
             help="specify a path to a mario rpg rom if you want to output your assembled bytes as a bps patch.",
         )
         parser.add_argument(
+            "--no-psychopath",
+            action="store_true",
+            dest="no_psychopath",
+            help="leave psychopath messages alone (they render uncompressed, so a full vanilla round-trip doesn't fit).",
+        )
+        parser.add_argument(
             "-a",
             "--animation-bank",
             dest="animation_bank",
@@ -77,7 +83,7 @@ class Command(BaseCommand):
 
         # render the collection to get the patch data
         try:
-            patch_data = collection.render()
+            patch_data = collection.render(psychopath=not options.get("no_psychopath"))
         except ValueError as e:
             self.stderr.write(self.style.ERROR(f"error rendering enemies: {e}"))
             exit(1)

@@ -19,6 +19,18 @@ from .input_file_parser import (
     load_variables_from_input_files,
 )
 
+# PaletteRow 8-15, in preserve-mask bit order (bit 0 = PaletteRow 8).
+PALETTE_ROW_NAMES = [
+    "MARIO_PALETTE",
+    "NPC_PALETTE_ROW_1",
+    "NPC_PALETTE_ROW_2",
+    "NPC_PALETTE_ROW_3",
+    "NPC_PALETTE_ROW_4",
+    "NPC_PALETTE_ROW_5",
+    "NPC_PALETTE_ROW_6",
+    "NPC_PALETTE_ROW_7",
+]
+
 DIRECTIONS = [
     "EAST",
     "SOUTHEAST",
@@ -81,13 +93,14 @@ AREA_OBJECTS = [
     "NPC_27",
 ]
 
+# names must match smrpgpatchbuilder.datatypes.overworld_scripts.arguments.intro_title_text
 INTRO_TEXT = [
-    "SUPER_MARIO",
-    "PRINCESS_TOADSTOOL",
-    "KING_BOWSER",
-    "MALLOW",
-    "GENO",
-    "IN",
+    "SUPER_MARIO_TITLE",
+    "PRINCESS_TOADSTOOL_TITLE",
+    "KING_BOWSER_TITLE",
+    "MALLOW_TITLE",
+    "GENO_TITLE",
+    "IN_TITLE",
 ]
 
 CONTROLLER_INPUTS = ["LEFT", "RIGHT", "DOWN", "UP", "X", "A", "Y", "B"]
@@ -303,21 +316,16 @@ class Command(BaseCommand):
                 include_argnames = False
                 args["address"] = vars_lookup.get(cmdargs[0])
             elif cmd["command"] == "adjust_music_tempo":
+                # cmdargs = [direction_bit, magnitude, duration]. adjust_music_calc
+                # already folded the sign into direction, so magnitude is always
+                # 0-127 - test the direction bit, not the magnitude.
                 args["duration"] = str(cmdargs[2])
-                if cmdargs[1] >= 0x80:
-                    cls = "SpeedUpMusicTempoBy"
-                    args["change"] = str((0x100 - cmdargs[1]) & 0xFF)
-                else:
-                    cls = "SlowDownMusicTempoBy"
-                    args["change"] = str(cmdargs[1])
+                cls = "SpeedUpMusicTempoBy" if cmdargs[0] else "SlowDownMusicTempoBy"
+                args["change"] = str(cmdargs[1])
             elif cmd["command"] == "adjust_music_pitch":
                 args["duration"] = str(cmdargs[2])
-                if cmdargs[1] >= 0x80:
-                    cls = "IncreaseMusicPitchBy"
-                    args["change"] = str((0x100 - cmdargs[1]) & 0xFF)
-                else:
-                    cls = "ReduceMusicPitchBy"
-                    args["change"] = str(cmdargs[1])
+                cls = "ReduceMusicPitchBy" if cmdargs[0] else "IncreaseMusicPitchBy"
+                args["change"] = str(cmdargs[1])
             elif cmd["command"] == "append_to_dialog_at_7000":
                 cls = "AppendDialogAt7000ToCurrentDialog"
                 args["closable"] = "True" if 5 in cmdargs[0] else "False"
@@ -1219,6 +1227,21 @@ class Command(BaseCommand):
                 args["speed"] = str(cmdargs[3])
                 if 7 in cmdargs[5]:
                     args["bit_15"] = "True"
+            elif cmd["command"] == "darken_layers_except_palette_rows":
+                # byte 2: fade_depth (bits 0-5) | duration low 2 bits (bits 6-7)
+                # byte 3: duration bits 2-9
+                # byte 4: preserve mask, bit 0 = MARIO_PALETTE (PaletteRow 8)
+                cls = "DarkenLayersExceptPaletteRows"
+                args["fade_depth"] = str(cmdargs[0] & 0x3F)
+                args["duration_frames"] = str(
+                    ((cmdargs[0] >> 6) & 0x03) | (cmdargs[1] << 2)
+                )
+                rows = [
+                    PALETTE_ROW_NAMES[i]
+                    for i in range(8)
+                    if cmdargs[2] & (1 << i)
+                ]
+                args["preserve_rows"] = "[%s]" % ", ".join(rows)
             elif cmd["command"] == "unfreeze_all_npcs":
                 cls = "UnfreezeAllNPCs"
             elif cmd["command"] == "unfreeze_camera":
@@ -1372,6 +1395,15 @@ class Command(BaseCommand):
                     args["priority"] = "OBJECT_OVERLAPS_MARIO_ON_ALL_SIDES"
                 elif priority == 3:
                     args["priority"] = "PRIORITY_3"
+            elif cmd["command"] == "toggle_subroutine_slots":
+                cls = "A_ToggleSubroutineSlots"
+                include_argnames = False
+                args["mask"] = f"0x{cmdargs[0]:02X}"
+            elif cmd["command"] == "set_subroutine_x_targets":
+                cls = "A_SetSubroutineXTargets"
+                include_argnames = False
+                args["slot_26_x"] = str(cmdargs[0])
+                args["slot_27_x"] = str(cmdargs[1])
             elif cmd["command"] == "bpl_26_27_28":
                 cls = "A_BPL262728"
             elif cmd["command"] == "bmi_26_27_28":

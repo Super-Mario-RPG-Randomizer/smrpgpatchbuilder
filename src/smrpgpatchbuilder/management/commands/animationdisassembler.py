@@ -112,48 +112,69 @@ def namestr(obj, namespace):
 # monster behaviours are pretty much just object queues.
 # the "sprite behaviour" dropdown is a pointer to an object queue.
 # 0x350202 + (enemy index * 2) = at this address you will find the address of the object queue the monster uses
-monster_behaviour_oq_offsets = [
-    0x35058A,  # no movement for "escape"
-    0x350596,  # slide backward when hit
-    0x3505A2,  # bowser clone sprite
-    0x3505AE,  # mario clone sprite
-    0x3505BA,  # no reaction when hit
-    0x350898,  # sprite shadow
-    0x350985,  # floating, sprite shadow
-    0x350991,  # floating
-    0x350AD3,  # floating, slide backward when hit
-    0x350ADF,  # floating, slide backward when hit
-    0x350AEB,  # fade out death, floating
-    0x350CF2,  # fade out death
-    0x350CFE,  # fade out death
-    0x350D0A,  # fade out death, smithy spell cast
-    0x350D16,  # fade out death, no "escape" movement
-    0x350E60,  # fade out death, no "escape" transition
-    0x350E6C,  # (normal)
-    0x350E78,  # no reaction when hit
-]
+MONSTER_BEHAVIOUR_PTR_TABLE = 0x350202
+MONSTER_BEHAVIOUR_PTR_COUNT = 256
 
-# Extract monster behaviour names from the comments above
-monster_behaviour_names = [
+# Behaviour names in order of first appearance in the pointer table. Enemy ->
+# behaviour assignment is identical in vanilla and in ROMs where the OQs have
+# merely been relocated, so first-appearance rank is a stable identity for a
+# behaviour even when its address changes.
+monster_behaviour_names_by_first_use = [
     "no_movement_for_escape",
-    "slide_backward_when_hit",
-    "bowser_clone_sprite",
-    "mario_clone_sprite",
-    "no_reaction_when_hit",
     "sprite_shadow",
     "floating_sprite_shadow",
-    "floating",
+    "fade_out_death",
+    "fade_out_death_no_escape_transition",
+    "fade_out_death_floating",
+    "no_reaction_when_hit",
     "floating_slide_backward_when_hit",
     "floating_slide_backward_when_hit_2",
-    "fade_out_death_floating",
-    "fade_out_death",
+    "mario_clone_sprite",
+    "slide_backward_when_hit",
+    "bowser_clone_sprite",
+    "no_reaction_when_hit_2",
+    "normal",
+    "floating",
     "fade_out_death_2",
     "fade_out_death_smithy_spell_cast",
     "fade_out_death_no_escape_movement",
-    "fade_out_death_no_escape_transition",
-    "normal",
-    "no_reaction_when_hit_2",
 ]
+
+# Populated from the ROM by load_monster_behaviour_oqs(). Index-aligned; both
+# are sorted by address so output ordering matches the vanilla layout.
+monster_behaviour_oq_offsets: list[int] = []
+monster_behaviour_names: list[str] = []
+
+
+def load_monster_behaviour_oqs(rom: bytearray) -> None:
+    """Read the monster behaviour OQ addresses out of the ROM's pointer table.
+
+    Hardcoding vanilla addresses breaks on ROMs that relocate the OQs: the
+    disassembler force-parses 12 bytes of real script code as a 6-pointer
+    object queue and desyncs the rest of the block.
+    """
+    by_first_use: list[int] = []
+    for i in range(MONSTER_BEHAVIOUR_PTR_COUNT):
+        addr = MONSTER_BEHAVIOUR_PTR_TABLE + i * 2
+        target = (MONSTER_BEHAVIOUR_PTR_TABLE & 0xFF0000) + shortify(rom, addr)
+        if target not in by_first_use:
+            by_first_use.append(target)
+
+    named = [
+        (
+            addr,
+            (
+                monster_behaviour_names_by_first_use[rank]
+                if rank < len(monster_behaviour_names_by_first_use)
+                else f"sprite_behaviour_{rank}"
+            ),
+        )
+        for rank, addr in enumerate(by_first_use)
+    ]
+    named.sort(key=lambda pair: pair[0])
+
+    monster_behaviour_oq_offsets[:] = [addr for addr, _ in named]
+    monster_behaviour_names[:] = [name for _, name in named]
 
 monster_entrance_offsets = [
     0x352148,
@@ -887,6 +908,8 @@ class Command(BaseCommand):
 
         global rom
         rom = bytearray(open(options["rom"], "rb").read())
+
+        load_monster_behaviour_oqs(rom)
 
         jump_pointers = []
 
