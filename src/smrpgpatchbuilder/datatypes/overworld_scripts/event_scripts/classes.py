@@ -201,10 +201,21 @@ class EventScriptBank(ScriptBank[EventScript]):
         for script_id, script in enumerate(self.scripts):
             self.pointer_bytes.extend(UInt16(position & 0xFFFF).little_endian())
             initial_position = position
-            c = deepcopy(script.contents)
+            # Only scripts holding a non-embedded action queue get their command
+            # list rebuilt (to insert the StopSound padding without disturbing
+            # the loop below). Everything else is left alone: deepcopying every
+            # script's command graph twice per render - once here, once inside
+            # set_contents - dominated this method, and only a handful of the
+            # bank's scripts actually need it.
+            needs_padding = any(
+                isinstance(cmd, NonEmbeddedActionQueuePrototype)
+                for cmd in script.contents
+            )
+            c = deepcopy(script.contents) if needs_padding else None
             for index, command in enumerate(script.contents):
                 # if this is a non-embedded action queue, insert dummy commands to fill space before the offset it should be at
                 if isinstance(command, NonEmbeddedActionQueuePrototype):
+                    assert c is not None
                     relative_offset: int = position - initial_position
                     if relative_offset <= command.required_offset:
                         for _ in range(command.required_offset - relative_offset):
@@ -216,7 +227,8 @@ class EventScriptBank(ScriptBank[EventScript]):
                         )
 
                 position = self._associate_address(command, position)
-            script.set_contents(c)
+            if c is not None:
+                script.set_contents(c)
 
         # replace jump placeholders with addresses
         for script in self.scripts:

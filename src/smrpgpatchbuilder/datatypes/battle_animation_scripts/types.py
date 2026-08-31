@@ -154,9 +154,13 @@ class AnimationScriptBlock(AnimationScript):
                 f"animation script output too long: got {len(output)} expected {self.expected_size} "
                 f"(over by {len(output) - self.expected_size} bytes)"
             )
-        buffer: list[UsableAnimationScriptCommand] = [ReturnSubroutine()] * (self.expected_size - len(output))
-        self.set_contents(self.contents + buffer)
-        output = super().render(_)
+        # Pad out to expected_size with ReturnSubroutine (opcode 0x11, 1 byte).
+        # Emitting the filler bytes directly avoids rebuilding the command list
+        # (set_contents deepcopies it) and re-rendering the whole block, and
+        # leaves this method free of side effects so repeated renders agree.
+        # The padding sits after every real command in the block and each block
+        # starts at its own expected_beginning, so it cannot shift any address.
+        output.extend(ReturnSubroutine().render() * (self.expected_size - len(output)))
         return output
 
 class AnimationScriptBank(ScriptBank[AnimationScript]):

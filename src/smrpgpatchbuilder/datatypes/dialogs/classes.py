@@ -201,6 +201,13 @@ class DialogCollection:
         assembled_dialog_data = []
         assembled_pointers = bytearray()
 
+        # (bank, index, position) -> pointer ids that resolve to that byte.
+        # Built once here rather than re-scanning all 4096 pointers for every
+        # compressed byte, which made this loop O(bytes * pointers).
+        pointers_by_target: dict[tuple[int, int, int], list[int]] = {}
+        for j, x in enumerate(self.dialogs):
+            pointers_by_target.setdefault((x.bank, x.index, x.position), []).append(j)
+
         for bank_index, text_collection in enumerate(compressed_text):
             bank = 0x22 + bank_index
             pointer_position = 0
@@ -208,13 +215,7 @@ class DialogCollection:
             # convert pointer data to offsets
             for dialog_id, dialog_bytes in enumerate(text_collection):
                 for index, _ in enumerate(dialog_bytes):
-                    indices = [
-                        j
-                        for j, x in enumerate(self.dialogs)
-                        if x.bank == bank
-                        and x.index == dialog_id
-                        and x.position == index
-                    ]
+                    indices = pointers_by_target.get((bank, dialog_id, index), ())
                     for matched_pointer in indices:
                         new_pointer_table[matched_pointer] = pointer_position
                     pointer_position += 1
