@@ -308,18 +308,31 @@ def sortByUsedSprites(
 
 
 def is_significant_tile(tiledata: tuple[int, ...]) -> bool:
-    return len([a for a in tiledata if a > 0]) > 4
+    """Whether a tile has more than four non-transparent pixels.
+
+    Counts with a short circuit rather than building a list and measuring it:
+    this is called once per tile per tileset comparison, which is tens of
+    millions of times during a full sprite assembly, and a typical tile passes
+    the threshold within its first few pixels.
+    """
+    count = 0
+    for pixel in tiledata:
+        if pixel > 0:
+            count += 1
+            if count > 4:
+                return True
+    return False
+
+
+def significant_tiles(tileset: list[tuple[int, ...]]) -> frozenset[tuple[int, ...]]:
+    """The distinct significant tiles of a tileset."""
+    return frozenset(t for t in tileset if is_significant_tile(t))
 
 
 def tileset_similarity(
     tileset1: list[tuple[int, ...]], tileset2: list[tuple[int, ...]]
 ) -> int:
-    sanitized_t1 = [t for t in tileset1 if is_significant_tile(t)]
-    sanitized_t2 = [t for t in tileset2 if is_significant_tile(t)]
-    t1 = set(sanitized_t1)
-    t2 = set(sanitized_t2)
-    similarity = len(set(t1).intersection(set(t2)))
-    return similarity
+    return len(significant_tiles(tileset1) & significant_tiles(tileset2))
 
 
 alphabet = string.ascii_lowercase + string.digits
@@ -1175,13 +1188,30 @@ class SpriteCollection:
         tile_groups: dict[str, TileGroup] = {}
         wip_sprites: list[WIPSprite] = []
 
+        # Significant-tile sets for tile groups, keyed by group id. Rebuilding
+        # them inside the scan below meant every group was re-sanitized once per
+        # candidate tileset; the entry is dropped whenever a group's tiles change
+        # (see _invalidate_group_tiles) so it can never go stale.
+        group_significant: dict[str, frozenset[tuple[int, ...]]] = {}
+
+        def _group_significant(key: str) -> frozenset[tuple[int, ...]]:
+            cached = group_significant.get(key)
+            if cached is None:
+                cached = significant_tiles(tile_groups[key].tiles)
+                group_significant[key] = cached
+            return cached
+
+        def _invalidate_group_tiles(key: str) -> None:
+            group_significant.pop(key, None)
+
         def get_most_similar_tileset(
             ts: list[tuple[int, ...]],
         ) -> tuple[str | None, float]:
             best: str | None = None
             best_similarity: int = 0
+            ts_significant = significant_tiles(ts)
             for k in tile_groups:
-                similarity = tileset_similarity(ts, tile_groups[k].tiles)
+                similarity = len(ts_significant & _group_significant(k))
                 if similarity > best_similarity:
                     best_similarity = similarity
                     best = k
@@ -1338,6 +1368,7 @@ class SpriteCollection:
                         seen.add(tile)
                         ordered_unique.append(tile)
                 tile_groups[key].tiles = ordered_unique
+                _invalidate_group_tiles(key)
             wip_sprite.tiles = unique_subtiles
             wip_sprite.tile_group = key
             wip_sprite.relative_offset = 0
@@ -1390,6 +1421,7 @@ class SpriteCollection:
                 tile_groups[k] = rearrange_tiles(tile_groups[k])
             else:
                 tile_groups[k].tiles = tile_groups[k].tiles
+            _invalidate_group_tiles(k)
             tile_groups[k].variance = has_variance
             unique_tiles_length += len(tile_groups[k].tiles)
 
